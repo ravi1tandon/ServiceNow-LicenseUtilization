@@ -96,7 +96,11 @@ function licRenderSkus(d) {
         var pct = Math.min(100, c.utilization)
         html += '<div class="lic-card">'
         html += '<h3>' + licEsc(c.name) + '<span class="lic-badge">' + licEsc(c.capability) + '</span></h3>'
-        html += '<div class="lic-muted">SKU: ' + (c.sku ? licEsc(c.sku) : '—') + ' · Purchased ' + licNum(c.purchased) + ' · Consumed ' + licNum(c.consumed) + ' · Utilization ' + c.utilization + '%</div>'
+        var suNote = ''
+        if (c.count_mode === 'subscription_units') {
+            suNote = ' · <span title="ServiceNow ITOM subscription-unit model">' + licNum(c.raw_count) + ' records ÷ ' + c.su_ratio + ' = ' + licNum(c.consumed) + ' SU</span>'
+        }
+        html += '<div class="lic-muted">SKU: ' + (c.sku ? licEsc(c.sku) : '—') + ' · Purchased ' + licNum(c.purchased) + ' · Consumed ' + licNum(c.consumed) + ' · Utilization ' + c.utilization + '%' + suNote + '</div>'
         html += '<div class="lic-bar-wrap"><div class="lic-bar-fill ' + barCls + '" style="width:' + pct + '%"></div></div>'
         html += '<div style="margin-top:10px">' + licSparkline(c.series, color) + '</div>'
         html += '</div>'
@@ -223,9 +227,80 @@ function licSparkline(series, color) {
     return svg + '</svg>'
 }
 
+function licToast(msg, isErr) {
+    var t = licById('lic-toast')
+    if (!t) { return }
+    t.className = isErr ? 'lic-toast err' : 'lic-toast'
+    t.innerHTML = licEsc(msg)
+    t.style.display = ''
+}
+
+// Build a CSV string from the loaded dashboard data: a per-SKU summary block,
+// the month-over-month overall series, and the actual consumer records.
+function licCsvCell(v) {
+    var s = String(v == null ? '' : v)
+    return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s
+}
+function licCsvRow(arr) {
+    var out = []
+    for (var i = 0; i < arr.length; i++) { out.push(licCsvCell(arr[i])) }
+    return out.join(',') + '\r\n'
+}
+function licBuildCsv(d) {
+    var csv = 'License Utilization & Consumption export\r\nGenerated,' + licCsvCell(d.generated) + '\r\n\r\n'
+    csv += 'SKU SUMMARY\r\n'
+    csv += licCsvRow(['Category', 'Capability', 'SKU', 'Purchased', 'Consumed', 'Utilization %', 'Source Table', 'Source Query', 'Consumers'])
+    for (var i = 0; i < d.categories.length; i++) {
+        var c = d.categories[i]
+        csv += licCsvRow([c.name, c.capability, c.sku, c.purchased, c.consumed, c.utilization, c.source_table, c.source_query, c.consumer_count])
+    }
+    csv += '\r\nMONTH-OVER-MONTH (ALL SKUs)\r\n'
+    csv += licCsvRow(['Month', 'Purchased', 'Consumed', 'Utilization %'])
+    for (var j = 0; j < d.overall_series.length; j++) {
+        var s = d.overall_series[j]
+        csv += licCsvRow([s.month, s.purchased, s.consumed, s.utilization])
+    }
+    csv += '\r\nSOURCE RECORDS (actual consumers)\r\n'
+    csv += licCsvRow(['Category', 'Consumer', 'Table', 'Sys ID'])
+    for (var k = 0; k < d.categories.length; k++) {
+        var cat = d.categories[k], cons = cat.consumers || []
+        for (var m = 0; m < cons.length; m++) {
+            csv += licCsvRow([cat.name, cons[m].label, cons[m].table, cons[m].sys_id])
+        }
+    }
+    return csv
+}
+function licExportCsv() {
+    if (!LIC.data || !LIC.data.categories) { licToast('No data to export yet.', true); return }
+    var csv = licBuildCsv(LIC.data)
+    var a = document.createElement('a')
+    a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv)
+    a.download = 'license-utilization-' + (LIC.data.generated || '').replace(/[^0-9]/g, '').slice(0, 8) + '.csv'
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    licToast('CSV exported (' + LIC.data.categories.length + ' SKUs, includes source records).')
+}
+
+// Ask the server to email the current user a summary of the dashboard.
+function licEmailSummary() {
+    licToast('Sending email…')
+    var ga = new GlideAjax('x_1983_licutil.LicenseAnalytics')
+    ga.addParam('sysparm_name', 'emailSummary')
+    ga.getXMLAnswer(function (answer) {
+        var res
+        try { res = JSON.parse(answer || '{}') } catch (e) { res = { ok: false, message: 'Unexpected response.' } }
+        licToast(res.message || (res.ok ? 'Email sent.' : 'Could not send email.'), !res.ok)
+    })
+}
+
 function licBoot() {
     var rb = licById('lic-refresh')
     if (rb) { rb.addEventListener('click', licRefresh) }
+    var cb = licById('lic-csv')
+    if (cb) { cb.addEventListener('click', licExportCsv) }
+    var eb = licById('lic-email')
+    if (eb) { eb.addEventListener('click', licEmailSummary) }
     var tb = document.getElementsByClassName('lic-tab')
     for (var i = 0; i < tb.length; i++) {
         tb[i].addEventListener('click', function () { licTab(this.getAttribute('data-tab')) })

@@ -32,6 +32,18 @@ export const x_1983_licutil_category = Table({
         source_query: StringColumn({ label: 'Source Encoded Query', maxLength: 1000 }),
         consumer_ref_field: StringColumn({ label: 'Consumer Field', maxLength: 60 }),
         consumer_table: StringColumn({ label: 'Consumer Table (for drill-down link)', maxLength: 80 }),
+        // Counting mode. 'records' = 1 consumed per distinct record (users, entitlements).
+        // 'subscription_units' = ServiceNow ITOM SU model: consumed = ceil(records / su_ratio),
+        // e.g. servers 1:1 (ratio 1), PaaS/containers 3:1 (ratio 3). See license_itom_ci_su_ratio.
+        count_mode: ChoiceColumn({
+            label: 'Count Mode',
+            default: 'records',
+            choices: {
+                records: 'Record count',
+                subscription_units: 'Subscription units (ratio)',
+            },
+        }),
+        su_ratio: IntegerColumn({ label: 'Source records per subscription unit', default: 1 }),
         // Manual fallback used only when source_table is empty.
         current_consumed: IntegerColumn({ label: 'Current Consumed (manual)' }),
         active: BooleanColumn({ label: 'Active', default: true }),

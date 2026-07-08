@@ -2,7 +2,7 @@
 
 **Application:** License Utilization Dashboard
 **Scope:** `x_1983_licutil`
-**Reviewed:** 2026-07-07
+**Reviewed:** 2026-07-08 (updated — added live consumer sourcing, cross-scope read privileges, subscription-unit counting, CSV/email export)
 **Reviewer:** Automated build + manual code review (Claude Code / ServiceNow SDK)
 **Instance verified against:** `dev270433.service-now.com`
 **Result:** ✅ No high or medium severity issues. Low-severity residual items and hardening recommendations listed below.
@@ -19,9 +19,11 @@ All source artifacts in this repository were reviewed for execution correctness 
 | 2 roles | `src/fluent/security/roles.now.ts` | `sys_user_role` |
 | 13 ACLs | `src/fluent/security/acls.now.ts` | `sys_security_acl` |
 | Data provider | `src/server/LicenseAnalytics.server.js` | `sys_script_include` (client-callable) |
-| Dashboard UI | `src/server/dashboard.html` | `sys_ui_page` (inline JS) |
+| Dashboard UI | `src/server/dashboard.html` + `dashboard.client.js` | `sys_ui_page` (HTML + separate `client_script`) |
 | Monthly snapshot | `src/server/snapshot.js` | `sysauto_script` |
 | Utilization rule | `src/fluent/automation/business-rules.now.ts` | `sys_script` |
+| 6 cross-scope read privileges | `src/fluent/security/cross-scope.now.ts` | `sys_scope_privilege` (read-only) |
+| Email summary + event | `src/fluent/automation/email-notify.now.ts` | `sysevent_email_action` + `sysevent_register` |
 | Navigation | `src/fluent/navigation/menu.now.ts` | `sys_app_application` + `sys_app_module` |
 | Demo data | `src/fluent/data/seed.now.ts` | `installMethod: 'demo'` records |
 
@@ -83,6 +85,19 @@ All ACLs use `decisionType: 'allow'` with `adminOverrides: true` (base-system ad
 
 ### 3.6 Web-service / data exposure — ✅ Not over-exposed
 - Tables were created without `allowWebServiceAccess`, so the REST Table API is not enabled for anonymous/integration access by default.
+
+### 3.7 Cross-scope privileges — ✅ Least privilege
+- The app declares **read-only** `sys_scope_privilege` records for exactly the six source tables it queries (`sys_user`, `sys_user_has_role`, `cmdb_ci_computer`, `cmdb_ci_server`, `alm_entitlement`, `sn_entitlement_genai_assist_analytics`). No `write`/`create`/`delete`/`execute` cross-scope grants. Each is table-specific — no wildcard scope access.
+- Reads still execute under the caller's ACLs (see 3.3), so the privilege authorizes the *scope boundary* crossing only, not any data the user couldn't otherwise read.
+- A denied read (e.g. a scope enforcing its own Restricted Caller Access) is caught in `countConsumers`/`listConsumers`, logged via `gs.error`, and returns 0/empty — one locked-down source cannot break the dashboard or leak an exception to the client.
+
+### 3.8 Email summary — ✅ Safe
+- **Recipient is server-derived**, never client-supplied: `emailSummary()` ignores any input and resolves the address from the signed-in user's own `sys_user.email`. A user can only email *themselves* their summary — no arbitrary-recipient / spoofing path.
+- The notification body is built by a mail script calling the same authenticated data provider; no user input is interpolated into the email.
+- Requirement: outbound email must be enabled on the instance; otherwise the event fires and no mail is sent (no error surfaced to other users).
+
+### 3.9 Subscription-unit counting — ✅ No security impact
+- `su_ratio` / `count_mode` are admin-only category fields used only in arithmetic (`Math.ceil(records / ratio)`); no query or access-control impact.
 
 ---
 

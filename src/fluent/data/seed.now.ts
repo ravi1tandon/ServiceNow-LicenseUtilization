@@ -17,7 +17,7 @@ const catPa = Record({
 })
 const catDisc = Record({
     $id: Now.ID['seed_cat_disc'], $meta: { installMethod: 'demo' }, table: 'x_1983_licutil_category',
-    data: { name: 'Discovery (Devices)', sku_code: 'DISCOVERY', capability: 'itom', description: 'Discovered computers/devices — Discovery is device-based.', source_table: 'cmdb_ci_computer', source_query: '', consumer_ref_field: '', consumer_table: 'cmdb_ci_computer', active: true },
+    data: { name: 'Discovery (Devices)', sku_code: 'DISCOVERY', capability: 'itom', description: 'ITOM/Discovery — counted in Subscription Units. Per ServiceNow: servers/computers 1:1 (ratio 1); PaaS/containers 3:1 (set ratio 3). Adjust su_ratio to your contract / license_itom_ci_su_ratio.', source_table: 'cmdb_ci_computer', source_query: '', consumer_ref_field: '', consumer_table: 'cmdb_ci_computer', count_mode: 'subscription_units', su_ratio: 1, active: true },
 })
 const catBiz = Record({
     $id: Now.ID['seed_cat_biz'], $meta: { installMethod: 'demo' }, table: 'x_1983_licutil_category',
@@ -29,7 +29,12 @@ const catSam = Record({
 })
 const catNa = Record({
     $id: Now.ID['seed_cat_nowassist'], $meta: { installMethod: 'demo' }, table: 'x_1983_licutil_category',
-    data: { name: 'Now Assist (Assists)', sku_code: 'NOWASSIST', capability: 'other', description: 'Now Assist GenAI assist usage records (token-based).', source_table: 'sn_entitlement_genai_assist_analytics', source_query: '', consumer_ref_field: '', consumer_table: 'sn_entitlement_genai_assist_analytics', active: true },
+    // INACTIVE by default: sn_entitlement_genai_assist_analytics is protected by Restricted
+    // Caller Access, owned by the "Licensing Engine" (sn_entitlement) app. An app cannot
+    // self-approve that read, so shipping it active would surface a denial banner. To enable:
+    // approve the pending RCA request (All → System Applications → ... Restricted Caller Access,
+    // set the x_1983_licutil → sn_entitlement read to Allowed), then set this category Active.
+    data: { name: 'Now Assist (Assists)', sku_code: 'NOWASSIST', capability: 'other', description: 'Now Assist GenAI assist usage (token-based). Inactive by default — requires Restricted Caller Access approval for sn_entitlement_genai_assist_analytics before activating.', source_table: 'sn_entitlement_genai_assist_analytics', source_query: '', consumer_ref_field: '', consumer_table: 'sn_entitlement_genai_assist_analytics', active: false },
 })
 
 // ── Purchases (admin configuration) ──────────────────────────────────────────

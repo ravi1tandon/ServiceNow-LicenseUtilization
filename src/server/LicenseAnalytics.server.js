@@ -13,21 +13,53 @@ LicenseAnalytics.prototype = Object.extendsObject(global.AbstractAjaxProcessor, 
         return JSON.stringify(this.buildPayload())
     },
 
-    // Count the real records that consume a license (distinct consumer_ref_field, or rows).
+    // GlideAjax: email the current user a summary of the dashboard. Fires a scoped event that
+    // the "License Utilization Summary" notification turns into an email. Returns {ok,message}.
+    emailSummary: function () {
+        var userId = gs.getUserID()
+        var ug = new GlideRecord('sys_user')
+        if (!ug.get(userId)) { return JSON.stringify({ ok: false, message: 'Could not resolve your user record.' }) }
+        var email = ug.getValue('email')
+        if (!email) { return JSON.stringify({ ok: false, message: 'No email address is set on your user record.' }) }
+        gs.eventQueue('x_1983_licutil.summary.email', ug, userId, email)
+        return JSON.stringify({ ok: true, message: 'Summary email queued to ' + email + '. It should arrive shortly.' })
+    },
+
+    // Count the real records that consume a license. With refField, counts DISTINCT values of
+    // that field (e.g. distinct users on sys_user_has_role) by grouping — this matches the
+    // drill-down list exactly. Without refField, counts matching rows.
     countConsumers: function (table, query, refField) {
         if (!table) { return 0 }
         try {
-            var ga = new GlideAggregate(table)
-            if (query) { ga.addEncodedQuery(query) }
-            if (refField) { ga.addAggregate('COUNT DISTINCT', refField) } else { ga.addAggregate('COUNT') }
-            ga.query()
-            if (ga.next()) {
-                return parseInt(ga.getAggregate(refField ? 'COUNT DISTINCT' : 'COUNT', refField || null), 10) || 0
+            if (refField) {
+                var ga = new GlideAggregate(table)
+                if (query) { ga.addEncodedQuery(query) }
+                ga.groupBy(refField)
+                ga.query()
+                var n = 0
+                while (ga.next()) {
+                    if (ga.getValue(refField)) { n++ } // one group per distinct non-empty value
+                }
+                return n
             }
+            var gr = new GlideRecord(table)
+            if (query) { gr.addEncodedQuery(query) }
+            gr.query()
+            return gr.getRowCount()
         } catch (e) {
             gs.error('[LicenseUtilization] countConsumers failed for ' + table + ' / ' + query + ': ' + e)
         }
         return 0
+    },
+
+    // Convert a raw record count into consumed units, applying the ITOM subscription-unit
+    // ratio when configured (consumed = ceil(records / su_ratio)); otherwise 1:1.
+    toConsumed: function (rawCount, countMode, suRatio) {
+        var ratio = parseInt(suRatio || '1', 10)
+        if (countMode === 'subscription_units' && ratio > 1) {
+            return Math.ceil(rawCount / ratio)
+        }
+        return rawCount
     },
 
     // List the actual consumer records (capped) for drill-down validation.
@@ -55,13 +87,17 @@ LicenseAnalytics.prototype = Object.extendsObject(global.AbstractAjaxProcessor, 
         return out
     },
 
-    // Live consumed count for one category GlideRecord (source-based, else manual fallback).
+    // Live figures for one category: { raw, consumed }. raw = actual records (drill-down count);
+    // consumed = licensed units after the subscription-unit ratio. Source-based, else manual.
     consumedFor: function (catGr) {
         var st = catGr.getValue('source_table')
         if (st) {
-            return this.countConsumers(st, catGr.getValue('source_query'), catGr.getValue('consumer_ref_field'))
+            var raw = this.countConsumers(st, catGr.getValue('source_query'), catGr.getValue('consumer_ref_field'))
+            var consumed = this.toConsumed(raw, catGr.getValue('count_mode'), catGr.getValue('su_ratio'))
+            return { raw: raw, consumed: consumed }
         }
-        return parseInt(catGr.getValue('current_consumed') || '0', 10)
+        var manual = parseInt(catGr.getValue('current_consumed') || '0', 10)
+        return { raw: manual, consumed: manual }
     },
 
     // Reusable server-side builder (also callable from server scripts / tests).
@@ -80,20 +116,25 @@ LicenseAnalytics.prototype = Object.extendsObject(global.AbstractAjaxProcessor, 
             var rf = gr.getValue('consumer_ref_field')
             var rt = gr.getValue('consumer_table')
             var consumers = st ? this.listConsumers(st, sq, rf, rt, this.LIST_LIMIT) : []
-            var consumed = this.consumedFor(gr)
+            var fig = this.consumedFor(gr)
+            var mode = gr.getValue('count_mode') || 'records'
+            var ratio = parseInt(gr.getValue('su_ratio') || '1', 10)
             cats[id] = {
                 id: id,
                 name: gr.getValue('name') || '',
                 sku: gr.getValue('sku_code') || '',
                 capability: gr.getDisplayValue('capability') || '',
                 purchased: 0,
-                consumed: consumed,
+                consumed: fig.consumed,
+                raw_count: fig.raw,
+                count_mode: mode,
+                su_ratio: ratio,
                 utilization: 0,
                 source_table: st || '',
                 source_query: sq || '',
-                consumer_count: consumed,
+                consumer_count: fig.raw,
                 consumers: consumers,
-                consumer_more: st ? (consumed > consumers.length) : false,
+                consumer_more: st ? (fig.raw > consumers.length) : false,
                 byMonth: {},
                 series: [],
             }

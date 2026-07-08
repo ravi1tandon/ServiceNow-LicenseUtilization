@@ -17,7 +17,16 @@
       "Bash(git config *)",
       "mcp__Claude_in_Chrome__list_connected_browsers",
       "mcp__visualize__show_widget",
-      "Bash(ssh -o StrictHostKeyChecking=accept-new -o ConnectTimeout=8 -T git@github.com)"
+      "Bash(ssh -o StrictHostKeyChecking=accept-new -o ConnectTimeout=8 -T git@github.com)",
+      "WebSearch",
+      "WebFetch(domain:www.servicenow.com)",
+      "WebFetch(domain:docs.servicenow.com)",
+      "Bash(ls -1 *.md docs/*.md)",
+      "Bash(wc -l *.md)",
+      "Bash(command -v gh)",
+      "Bash(gh auth *)",
+      "Bash(git add *)",
+      "Bash(git commit *)"
     ]
   }
 }

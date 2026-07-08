@@ -28,7 +28,7 @@
     while (cat.next()) {
         var catId = cat.getUniqueValue()
         var purchased = sumPurchased(catId)
-        var consumed = analytics.consumedFor(cat) // live source count (or manual fallback)
+        var consumed = analytics.consumedFor(cat).consumed // live consumed units (SU-adjusted)
         var util = purchased > 0 ? Math.round((consumed / purchased) * 10000) / 100 : 0
 
         var snap = new GlideRecord(CON)

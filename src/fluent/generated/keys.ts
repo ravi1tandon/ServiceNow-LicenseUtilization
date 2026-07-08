@@ -65,6 +65,10 @@ declare global {
                         table: 'sys_script'
                         id: '5bb4d4b6907e4966a01c5149f39d33ae'
                     }
+                    evt_summary_email: {
+                        table: 'sysevent_register'
+                        id: '5c9952bd57cf4b88998273620e016bff'
+                    }
                     job_monthly_snapshot: {
                         table: 'sysauto_script'
                         id: 'db000913251b405585cb48959f0c4bf6'
@@ -92,6 +96,10 @@ declare global {
                     mod_sep_admin: {
                         table: 'sys_app_module'
                         id: '5b99495e70ef44d699541390bf1d8b4d'
+                    }
+                    notif_summary_email: {
+                        table: 'sysevent_email_action'
+                        id: '15d149e97c29414582ab0a8e100b363d'
                     }
                     package_json: {
                         table: 'sys_module'
@@ -298,6 +306,30 @@ declare global {
                     src_server_snapshot_js: {
                         table: 'sys_module'
                         id: '1f8951ee995542bfb39baa5d141a2782'
+                    }
+                    xsp_alm_entitlement: {
+                        table: 'sys_scope_privilege'
+                        id: '0e3cdd591bac4a98b66d001b200c9113'
+                    }
+                    xsp_cmdb_computer: {
+                        table: 'sys_scope_privilege'
+                        id: '5e166cce082249eeb5ef69e5b639f7fd'
+                    }
+                    xsp_cmdb_server: {
+                        table: 'sys_scope_privilege'
+                        id: 'b4d8e8c77ac44d80afb4093499a43249'
+                    }
+                    xsp_genai_assist: {
+                        table: 'sys_scope_privilege'
+                        id: '200ea0eb3701403587fb624b9133504c'
+                    }
+                    xsp_sys_user: {
+                        table: 'sys_scope_privilege'
+                        id: '238e4a2af31148e19e42a1efe081b591'
+                    }
+                    xsp_user_has_role: {
+                        table: 'sys_scope_privilege'
+                        id: 'a656815a5d8e4c0ebd2251ccf3344c3a'
                     }
                 }
                 composite: [
@@ -704,12 +736,29 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_choice'
+                        id: '990ae16710a94785b163fafda2ccafa9'
+                        key: {
+                            name: 'x_1983_licutil_category'
+                            element: 'count_mode'
+                            value: 'subscription_units'
+                        }
+                    },
+                    {
                         table: 'sys_documentation'
                         id: '9deb1eaafcce4805aeb2907bfea912e7'
                         key: {
                             name: 'x_1983_licutil_category'
                             element: 'sku_code'
                             language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_choice_set'
+                        id: 'a129329471cd44dcaa283c52b7fd784a'
+                        key: {
+                            name: 'x_1983_licutil_category'
+                            element: 'count_mode'
                         }
                     },
                     {
@@ -733,6 +782,15 @@ declare global {
                         key: {
                             name: 'x_1983_licutil_purchase'
                             element: 'purchase_date'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
+                        id: 'a7ec4c5dc9f044ef9f0e4fbd04dfeefa'
+                        key: {
+                            name: 'x_1983_licutil_category'
+                            element: 'count_mode'
+                            language: 'en'
                         }
                     },
                     {
@@ -802,6 +860,15 @@ declare global {
                             name: 'x_1983_licutil_category'
                             element: 'capability'
                             value: 'other'
+                        }
+                    },
+                    {
+                        table: 'sys_choice'
+                        id: 'b80a15f15423422e97672d7520cba3c7'
+                        key: {
+                            name: 'x_1983_licutil_category'
+                            element: 'count_mode'
+                            value: 'records'
                         }
                     },
                     {
@@ -939,6 +1006,15 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_documentation'
+                        id: 'dd36d0af7f2a4992b3403edc661a7dbc'
+                        key: {
+                            name: 'x_1983_licutil_category'
+                            element: 'su_ratio'
+                            language: 'en'
+                        }
+                    },
+                    {
                         table: 'sys_dictionary'
                         id: 'de7887b36f0b4ec5bb11188dae21881e'
                         key: {
@@ -965,6 +1041,14 @@ declare global {
                     },
                     {
                         table: 'sys_dictionary'
+                        id: 'ea3d7eeedfe147259538e5ece3f25a3d'
+                        key: {
+                            name: 'x_1983_licutil_category'
+                            element: 'count_mode'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
                         id: 'eabb9ff4a05b4f0eb2bede20fc5d779b'
                         key: {
                             name: 'x_1983_licutil_purchase'
@@ -978,6 +1062,14 @@ declare global {
                             name: 'x_1983_licutil_category'
                             element: 'consumer_table'
                             language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
+                        id: 'ec91332c50f4488cbd0e434a66a66e8c'
+                        key: {
+                            name: 'x_1983_licutil_category'
+                            element: 'su_ratio'
                         }
                     },
                     {
