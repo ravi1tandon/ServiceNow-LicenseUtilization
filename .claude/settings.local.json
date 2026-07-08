@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx @servicenow/sdk --help)",
+      "Bash(npx @servicenow/sdk explain quickstart --list --format=raw)",
+      "Read(//usr/local/bin/**)",
+      "Read(//Users/ravita/.nvm/versions/**)",
+      "Bash(command -v brew)",
+      "Bash(echo \"brew: $\\(command -v brew || echo none\\)\")",
+      "Read(//Applications/**)",
+      "Bash(command -v corepack)",
+      "Bash(curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh)",
+      "Bash(bash)",
+      "Bash(npx -v)",
+      "Bash(npm -v)"
+    ]
+  }
+}
