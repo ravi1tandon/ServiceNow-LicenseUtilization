@@ -6,3 +6,6 @@ target/
 *.tsbuildinfo
 .jest_cache
 .now-sdk/
+
+# Claude Code local (machine-specific) settings
+.claude/settings.local.json
