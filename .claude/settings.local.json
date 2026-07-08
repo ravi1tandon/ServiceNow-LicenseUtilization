@@ -12,7 +12,12 @@
       "Bash(curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh)",
       "Bash(bash)",
       "Bash(npx -v)",
-      "Bash(npm -v)"
+      "Bash(npm -v)",
+      "Bash(git commit -q -m ' *)",
+      "Bash(git config *)",
+      "mcp__Claude_in_Chrome__list_connected_browsers",
+      "mcp__visualize__show_widget",
+      "Bash(ssh -o StrictHostKeyChecking=accept-new -o ConnectTimeout=8 -T git@github.com)"
     ]
   }
 }

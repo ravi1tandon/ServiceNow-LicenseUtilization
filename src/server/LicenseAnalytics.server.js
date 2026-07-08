@@ -1,5 +1,8 @@
+/* eslint-disable no-unsupported-node-builtins */
+// `global` here is the ServiceNow global application scope (not Node.js). A scoped
+// client-callable script include must extend global.AbstractAjaxProcessor.
 var LicenseAnalytics = Class.create()
-LicenseAnalytics.prototype = Object.extendsObject(AbstractAjaxProcessor, {
+LicenseAnalytics.prototype = Object.extendsObject(global.AbstractAjaxProcessor, {
     CAT: 'x_1983_licutil_category',
     PUR: 'x_1983_licutil_purchase',
     CON: 'x_1983_licutil_consumption',
@@ -44,22 +47,32 @@ LicenseAnalytics.prototype = Object.extendsObject(AbstractAjaxProcessor, {
             }
         }
 
-        // Monthly consumption snapshots.
+        // Monthly consumption snapshots. Also collect the raw rows (with sys_id) so the
+        // dashboard can show exactly which records back each number, for validation.
         var monthsSet = {}
+        var records = []
         var cg = new GlideRecord(this.CON)
+        cg.orderBy('category')
         cg.orderBy('period_month')
         cg.query()
         while (cg.next()) {
             var ccat = cg.getValue('category')
             if (!cats[ccat]) continue
             var m = cg.getValue('period_month') || ''
+            var rowPurchased = parseInt(cg.getValue('purchased') || '0', 10)
+            var rowConsumed = parseInt(cg.getValue('consumed') || '0', 10)
+            var rowUtil = parseFloat(cg.getValue('utilization_pct') || '0')
             monthsSet[m] = true
-            cats[ccat].byMonth[m] = {
+            cats[ccat].byMonth[m] = { month: m, purchased: rowPurchased, consumed: rowConsumed, utilization: rowUtil }
+            records.push({
+                sys_id: cg.getUniqueValue(),
+                category: cats[ccat].name,
                 month: m,
-                purchased: parseInt(cg.getValue('purchased') || '0', 10),
-                consumed: parseInt(cg.getValue('consumed') || '0', 10),
-                utilization: parseFloat(cg.getValue('utilization_pct') || '0'),
-            }
+                purchased: rowPurchased,
+                consumed: rowConsumed,
+                utilization: rowUtil,
+                snapshot_date: cg.getDisplayValue('snapshot_date') || '',
+            })
         }
 
         var months = Object.keys(monthsSet).sort()
@@ -121,6 +134,8 @@ LicenseAnalytics.prototype = Object.extendsObject(AbstractAjaxProcessor, {
             overall_series: overall,
             mom: mom,
             categories: categories,
+            records: records,
+            consumption_table: this.CON,
         }
     },
 

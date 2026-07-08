@@ -19,6 +19,14 @@ Portable: installs on any instance as a scoped app ("My Company Apps").
    Add a new category → a new widget appears on refresh. No dashboard edits required.
 4. **MoM history** — a monthly Scheduled Script snapshots purchased/consumed/utilization per
    category into `x_1983_licutil_consumption`, building the time series the trends draw from.
+5. **Source Records** — a dashboard tab listing the exact consumption records behind the
+   numbers, each linking to the real record, so users can validate the data.
+
+## Documentation
+
+- **[DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)** — install, auth, build/deploy, verify, update, uninstall.
+- **[USER_GUIDE.md](USER_GUIDE.md)** — administrator and end-user manuals.
+- **[SECURITY.md](SECURITY.md)** — security review report.
 
 ## Data model
 

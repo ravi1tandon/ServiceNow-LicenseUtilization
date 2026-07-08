@@ -173,6 +173,10 @@ declare global {
                         table: 'sys_script_include'
                         id: 'ba47f93d868b43ca9aa9e3efd329d36d'
                     }
+                    src_server_dashboard_client_js: {
+                        table: 'sys_module'
+                        id: 'eb4806564c7b4482a56bd03a9eaf5e91'
+                    }
                     src_server_LicenseAnalytics_server_js: {
                         table: 'sys_module'
                         id: '203a5c78d510401a83684ea42338203d'
