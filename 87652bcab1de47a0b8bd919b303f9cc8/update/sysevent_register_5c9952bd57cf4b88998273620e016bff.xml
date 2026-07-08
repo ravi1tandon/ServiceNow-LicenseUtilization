@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sysevent_register">
+    <sysevent_register action="INSERT_OR_UPDATE">
+        <caller_access/>
+        <derived_priority/>
+        <description>Fired when a user requests an emailed License Utilization summary from the dashboard.</description>
+        <event_name>x_1983_licutil.summary.email</event_name>
+        <fired_by/>
+        <priority/>
+        <queue/>
+        <suffix/>
+        <sys_class_name>sysevent_register</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-07-08 16:48:49</sys_created_on>
+        <sys_id>5c9952bd57cf4b88998273620e016bff</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>x_1983_licutil.summary.email</sys_name>
+        <sys_package display_value="License Utilization Dashboard" source="x_1983_licutil">87652bcab1de47a0b8bd919b303f9cc8</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="License Utilization Dashboard">87652bcab1de47a0b8bd919b303f9cc8</sys_scope>
+        <sys_update_name>sysevent_register_5c9952bd57cf4b88998273620e016bff</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-07-08 16:48:49</sys_updated_on>
+        <table>sys_user</table>
+    </sysevent_register>
+</record_update>

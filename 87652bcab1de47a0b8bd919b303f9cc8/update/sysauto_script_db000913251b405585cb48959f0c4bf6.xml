@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sysauto_script">
+    <sysauto_script action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <advanced>false</advanced>
+        <business_calendar/>
+        <condition/>
+        <conditional>false</conditional>
+        <entered_run_end/>
+        <entered_run_start/>
+        <entered_time>1970-01-01 00:00:00</entered_time>
+        <max_drift/>
+        <name>License Utilization - Monthly Snapshot</name>
+        <offset/>
+        <offset_type>0</offset_type>
+        <repeat_every/>
+        <run_as/>
+        <run_as_tz/>
+        <run_dayofmonth>1</run_dayofmonth>
+        <run_dayofweek>1</run_dayofweek>
+        <run_daysofweek/>
+        <run_end/>
+        <run_month>1</run_month>
+        <run_period/>
+        <run_start>2026-07-08 17:43:29</run_start>
+        <run_time>2026-07-08 17:43:37</run_time>
+        <run_type>monthly</run_type>
+        <run_weekinmonth>1</run_weekinmonth>
+        <script><![CDATA[// Monthly license-consumption snapshot.
+// For each active category, records purchased (sum of purchase records) and consumed
+// (live count of the real consumer records defined by the category's source query) for the
+// current YYYY-MM. Upserts, so re-running in the same month refreshes the row. Builds MoM history.
+;(function runSnapshot() {
+    var CAT = 'x_1983_licutil_category'
+    var PUR = 'x_1983_licutil_purchase'
+    var CON = 'x_1983_licutil_consumption'
+
+    var analytics = new x_1983_licutil.LicenseAnalytics()
+    var now = new GlideDateTime()
+    var period = now.getValue().substring(0, 7) // 'YYYY-MM' (UTC internal)
+    var today = now.getDate().getValue() // 'YYYY-MM-DD'
+
+    function sumPurchased(categoryId) {
+        var total = 0
+        var g = new GlideRecord(PUR)
+        g.addQuery('category', categoryId)
+        g.query()
+        while (g.next()) { total += parseInt(g.getValue('licenses_purchased') || '0', 10) }
+        return total
+    }
+
+    var processed = 0
+    var cat = new GlideRecord(CAT)
+    cat.addActiveQuery()
+    cat.query()
+    while (cat.next()) {
+        var catId = cat.getUniqueValue()
+        var purchased = sumPurchased(catId)
+        var consumed = analytics.consumedFor(cat).consumed // live consumed units (SU-adjusted)
+        var util = purchased > 0 ? Math.round((consumed / purchased) * 10000) / 100 : 0
+
+        var snap = new GlideRecord(CON)
+        snap.addQuery('category', catId)
+        snap.addQuery('period_month', period)
+        snap.query()
+        if (snap.next()) {
+            snap.setValue('purchased', purchased)
+            snap.setValue('consumed', consumed)
+            snap.setValue('utilization_pct', util)
+            snap.setValue('snapshot_date', today)
+            snap.update()
+        } else {
+            snap.initialize()
+            snap.setValue('category', catId)
+            snap.setValue('period_month', period)
+            snap.setValue('purchased', purchased)
+            snap.setValue('consumed', consumed)
+            snap.setValue('utilization_pct', util)
+            snap.setValue('snapshot_date', today)
+            snap.insert()
+        }
+        processed++
+    }
+    gs.info('[LicenseUtilization] Monthly snapshot complete for ' + period + ': ' + processed + ' category(ies).')
+})()
+]]></script>
+        <sys_class_name>sysauto_script</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-07-08 01:29:03</sys_created_on>
+        <sys_id>db000913251b405585cb48959f0c4bf6</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>License Utilization - Monthly Snapshot</sys_name>
+        <sys_package display_value="License Utilization Dashboard" source="x_1983_licutil">87652bcab1de47a0b8bd919b303f9cc8</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="License Utilization Dashboard">87652bcab1de47a0b8bd919b303f9cc8</sys_scope>
+        <sys_update_name>sysauto_script_db000913251b405585cb48959f0c4bf6</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-07-08 01:29:03</sys_updated_on>
+        <time_zone>UTC</time_zone>
+        <upgrade_safe>false</upgrade_safe>
+    </sysauto_script>
+</record_update>

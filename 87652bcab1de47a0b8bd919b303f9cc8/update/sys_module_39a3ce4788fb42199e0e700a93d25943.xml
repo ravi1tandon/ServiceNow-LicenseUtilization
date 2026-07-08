@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_module">
+    <sys_module action="INSERT_OR_UPDATE">
+        <content><![CDATA[{
+  "name": "license-utilization-dashboard",
+  "version": "0.0.1",
+  "description": "",
+  "license": "UNLICENSED",
+  "imports": {
+    "#now:*": "./@types/servicenow/fluent/*/index.js"
+  },
+  "scripts": {
+    "build": "now-sdk build",
+    "deploy": "now-sdk install",
+    "transform": "now-sdk transform",
+    "types": "now-sdk dependencies"
+  },
+  "devDependencies": {
+    "@servicenow/sdk": "4.8.1",
+    "@servicenow/glide": "27.0.5"
+  },
+  "allowScripts": {
+    "@swc/core@1.15.11": true,
+    "libxmljs2@0.37.0": true,
+    "@parcel/watcher@2.5.6": true
+  }
+}]]></content>
+        <external_source>false</external_source>
+        <path>x_1983_licutil/license-utilization-dashboard/0.0.1/package.json</path>
+        <sys_class_name>sys_module</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-07-08 01:29:01</sys_created_on>
+        <sys_id>39a3ce4788fb42199e0e700a93d25943</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>x_1983_licutil/license-utilization-dashboard/0.0.1/package.json</sys_name>
+        <sys_package display_value="License Utilization Dashboard" source="x_1983_licutil">87652bcab1de47a0b8bd919b303f9cc8</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="License Utilization Dashboard">87652bcab1de47a0b8bd919b303f9cc8</sys_scope>
+        <sys_update_name>sys_module_39a3ce4788fb42199e0e700a93d25943</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-07-08 01:29:01</sys_updated_on>
+    </sys_module>
+</record_update>

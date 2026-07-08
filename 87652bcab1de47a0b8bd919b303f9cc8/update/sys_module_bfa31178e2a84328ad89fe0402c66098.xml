@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_module">
+    <sys_module action="INSERT_OR_UPDATE">
+        <content><![CDATA[{
+  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "version": 1,
+  "serialNumber": "urn:uuid:c725be08-38c5-4ff6-a7eb-cc6098ec21ab",
+  "metadata": {
+    "timestamp": "2026-07-08T17:43:30.403Z",
+    "tools": {
+      "components": [
+        {
+          "type": "library",
+          "name": "sdk-build-plugins",
+          "group": "@servicenow",
+          "version": "4.8.1",
+          "author": "ServiceNow"
+        }
+      ]
+    },
+    "component": {
+      "type": "application",
+      "name": "license-utilization-dashboard",
+      "version": "0.0.1",
+      "bom-ref": "pkg:servicenow/license-utilization-dashboard@0.0.1?sys_scope_id=87652bcab1de47a0b8bd919b303f9cc8",
+      "licenses": [
+        {
+          "license": {
+            "name": "UNLICENSED"
+          }
+        }
+      ],
+      "purl": "pkg:servicenow/license-utilization-dashboard@0.0.1?sys_scope_id=87652bcab1de47a0b8bd919b303f9cc8"
+    }
+  },
+  "components": [],
+  "dependencies": [
+    {
+      "ref": "pkg:servicenow/license-utilization-dashboard@0.0.1?sys_scope_id=87652bcab1de47a0b8bd919b303f9cc8"
+    }
+  ]
+}]]></content>
+        <external_source>false</external_source>
+        <path>x_1983_licutil/license-utilization-dashboard/0.0.1/bom.json</path>
+        <sys_class_name>sys_module</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-07-08 01:29:01</sys_created_on>
+        <sys_id>bfa31178e2a84328ad89fe0402c66098</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>x_1983_licutil/license-utilization-dashboard/0.0.1/bom.json</sys_name>
+        <sys_package display_value="License Utilization Dashboard" source="x_1983_licutil">87652bcab1de47a0b8bd919b303f9cc8</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="License Utilization Dashboard">87652bcab1de47a0b8bd919b303f9cc8</sys_scope>
+        <sys_update_name>sys_module_bfa31178e2a84328ad89fe0402c66098</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-07-08 01:29:01</sys_updated_on>
+    </sys_module>
+</record_update>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_choice action="INSERT_OR_UPDATE" field="count_mode" table="x_1983_licutil_category" version="3">
+        <sys_choice_set action="INSERT_OR_UPDATE">
+            <element>count_mode</element>
+            <name>x_1983_licutil_category</name>
+            <sys_class_name>sys_choice_set</sys_class_name>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-07-08 16:48:45</sys_created_on>
+            <sys_id>b180f70cc30283101027df0d050131e9</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>count_mode</sys_name>
+            <sys_package display_value="License Utilization Dashboard" source="x_1983_licutil">87652bcab1de47a0b8bd919b303f9cc8</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="License Utilization Dashboard">87652bcab1de47a0b8bd919b303f9cc8</sys_scope>
+            <sys_update_name>sys_choice_x_1983_licutil_category_count_mode</sys_update_name>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-07-08 16:48:45</sys_updated_on>
+        </sys_choice_set>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>count_mode</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Record count</label>
+            <language>en</language>
+            <name>x_1983_licutil_category</name>
+            <sequence>1</sequence>
+            <synonyms/>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-07-08 17:43:36</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>b80a15f15423422e97672d7520cba3c7</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-07-08 17:43:36</sys_updated_on>
+            <value>records</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>count_mode</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Subscription units (ratio)</label>
+            <language>en</language>
+            <name>x_1983_licutil_category</name>
+            <sequence>2</sequence>
+            <synonyms/>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-07-08 17:43:36</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>990ae16710a94785b163fafda2ccafa9</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-07-08 17:43:36</sys_updated_on>
+            <value>subscription_units</value>
+        </sys_choice>
+    </sys_choice>
+</record_update>
