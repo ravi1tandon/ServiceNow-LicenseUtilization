@@ -59,6 +59,7 @@ All ACLs use `decisionType: 'allow'` with `adminOverrides: true` (base-system ad
 
 ### 3.1 Injection (SQL / GlideRecord query) — ✅ None
 - `LicenseAnalytics.getDashboardData()` takes **no parameters** — there is no user-controlled input in any `addQuery()`. All queries filter on fixed field names and server-derived values only.
+- The consumer-source engine (`countConsumers` / `listConsumers`) builds queries from `source_table` + `source_query` stored on **category records**, which are **admin-only** (create/write ACL = admin). End users cannot influence these values, so there is no injection path from untrusted input. Admins already have broad query rights, so this grants no new privilege.
 - `snapshot.js` uses only server-side values (category sys_ids, current period). `parseInt(..., 10)` used throughout — no string concatenation into queries.
 - No `GlideRecord.addEncodedQuery()` built from user input anywhere.
 
@@ -69,6 +70,7 @@ All ACLs use `decisionType: 'allow'` with `adminOverrides: true` (base-system ad
 
 ### 3.3 Authentication / authorization — ✅ Enforced
 - The data API requires `user_is_authenticated` **and** the viewer/admin role. An unauthenticated or unauthorized caller receives no data.
+- Consumer counts/lists are read via `GlideRecord`/`GlideAggregate` in a client-callable script include, i.e. **as the signed-in user with source-table ACLs enforced**. This is a *feature* (no privilege escalation — users never see source records they couldn't otherwise read) but means a viewer lacking read access to a source table (e.g. `cmdb_ci`) may see a lower count than an admin. Documented in USER_GUIDE.md; grant read access or run via a service account if uniform counts are required.
 - The UI Page itself requires an authenticated session (not a public page). An authenticated user lacking the viewer role who reaches the `.do` sees only an empty shell — the GlideAjax call returns nothing. Defense-in-depth (see residual item 4.1).
 
 ### 3.4 Secrets / credentials — ✅ None in source

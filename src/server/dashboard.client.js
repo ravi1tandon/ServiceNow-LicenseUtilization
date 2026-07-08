@@ -121,25 +121,36 @@ function licRenderTrend(d) {
 }
 
 function licRenderRecords(d) {
-    var recs = d.records || []
-    var table = d.consumption_table || 'x_1983_licutil_consumption'
-    var listUrl = table + '_list.do'
-    var html = '<div class="lic-card"><h3>Source Consumption Records <span class="lic-badge">' + recs.length + '</span></h3>'
-    html += '<div class="lic-muted">The exact snapshot records the charts are computed from. Click a row’s <b>Open</b> link to validate the underlying data. '
-    html += '<a href="' + licEsc(listUrl) + '" target="_blank" rel="noopener">Open full list</a>.</div>'
-    if (!recs.length) {
-        html += '<div class="lic-muted" style="margin-top:10px">No consumption records found.</div></div>'
-        licById('lic-panel-records').innerHTML = html
-        return
+    var html = '<div class="lic-muted" style="margin-bottom:8px">The actual records consuming each license, so you can validate every count. “Open” goes to the underlying user/device/record; “Open full list” shows all matches in a ServiceNow list.</div>'
+    for (var i = 0; i < d.categories.length; i++) {
+        var c = d.categories[i]
+        html += '<div class="lic-card">'
+        html += '<h3>' + licEsc(c.name) + '<span class="lic-badge">' + licEsc(c.capability) + '</span></h3>'
+        if (!c.source_table) {
+            html += '<div class="lic-muted">No source configured. Set a <b>Source Table</b> / <b>Source Query</b> on this category to enable drill-down.</div></div>'
+            continue
+        }
+        var listUrl = licEsc(c.source_table) + '_list.do'
+        if (c.source_query) { listUrl += '?sysparm_query=' + encodeURIComponent(c.source_query) }
+        html += '<div class="lic-muted">' + licNum(c.consumer_count) + ' consumer(s) · source: <code>' + licEsc(c.source_table) + '</code>'
+        html += c.source_query ? (' · <code>' + licEsc(c.source_query) + '</code>') : ''
+        html += ' · <a href="' + listUrl + '" target="_blank" rel="noopener">Open full list</a></div>'
+        var cons = c.consumers || []
+        if (cons.length) {
+            html += '<table class="lic-tbl"><thead><tr><th>Consumer</th><th></th></tr></thead><tbody>'
+            for (var k = 0; k < cons.length; k++) {
+                var r = cons[k]
+                var t = r.table || c.source_table
+                var url = t ? (licEsc(t) + '.do?sys_id=' + encodeURIComponent(r.sys_id)) : ''
+                html += '<tr><td>' + licEsc(r.label) + '</td><td>' + (url ? ('<a href="' + url + '" target="_blank" rel="noopener">Open</a>') : '') + '</td></tr>'
+            }
+            html += '</tbody></table>'
+            if (c.consumer_more) { html += '<div class="lic-muted">Showing first ' + cons.length + ' of ' + licNum(c.consumer_count) + '. Use “Open full list” to see all.</div>' }
+        } else {
+            html += '<div class="lic-muted">No matching records.</div>'
+        }
+        html += '</div>'
     }
-    html += '<table class="lic-tbl"><thead><tr><th>Category</th><th>Month</th><th>Purchased</th><th>Consumed</th><th>Utilization</th><th>Snapshot</th><th></th></tr></thead><tbody>'
-    for (var i = 0; i < recs.length; i++) {
-        var r = recs[i]
-        var url = licEsc(table) + '.do?sys_id=' + encodeURIComponent(r.sys_id)
-        html += '<tr><td>' + licEsc(r.category) + '</td><td>' + licEsc(r.month) + '</td><td>' + licNum(r.purchased) + '</td><td>' + licNum(r.consumed) + '</td><td>' + r.utilization + '%</td><td>' + licEsc(r.snapshot_date) + '</td>'
-        html += '<td><a href="' + url + '" target="_blank" rel="noopener">Open</a></td></tr>'
-    }
-    html += '</tbody></table></div>'
     licById('lic-panel-records').innerHTML = html
 }
 

@@ -6,10 +6,62 @@ LicenseAnalytics.prototype = Object.extendsObject(global.AbstractAjaxProcessor, 
     CAT: 'x_1983_licutil_category',
     PUR: 'x_1983_licutil_purchase',
     CON: 'x_1983_licutil_consumption',
+    LIST_LIMIT: 100,
 
     // GlideAjax entry point. Returns the full dashboard payload as a JSON string.
     getDashboardData: function () {
         return JSON.stringify(this.buildPayload())
+    },
+
+    // Count the real records that consume a license (distinct consumer_ref_field, or rows).
+    countConsumers: function (table, query, refField) {
+        if (!table) { return 0 }
+        try {
+            var ga = new GlideAggregate(table)
+            if (query) { ga.addEncodedQuery(query) }
+            if (refField) { ga.addAggregate('COUNT DISTINCT', refField) } else { ga.addAggregate('COUNT') }
+            ga.query()
+            if (ga.next()) {
+                return parseInt(ga.getAggregate(refField ? 'COUNT DISTINCT' : 'COUNT', refField || null), 10) || 0
+            }
+        } catch (e) {
+            gs.error('[LicenseUtilization] countConsumers failed for ' + table + ' / ' + query + ': ' + e)
+        }
+        return 0
+    },
+
+    // List the actual consumer records (capped) for drill-down validation.
+    listConsumers: function (table, query, refField, refTable, limit) {
+        var out = []
+        if (!table) { return out }
+        try {
+            var seen = {}
+            var gr = new GlideRecord(table)
+            if (query) { gr.addEncodedQuery(query) }
+            if (refField) { gr.orderBy(refField) }
+            gr.setLimit(limit > 0 ? limit : this.LIST_LIMIT)
+            gr.query()
+            while (gr.next()) {
+                var id, label, tbl
+                if (refField) { id = gr.getValue(refField); label = gr.getDisplayValue(refField); tbl = refTable || '' }
+                else { id = gr.getUniqueValue(); label = gr.getDisplayValue(); tbl = table }
+                if (!id || seen[id]) { continue }
+                seen[id] = 1
+                out.push({ sys_id: id, label: label || id, table: tbl })
+            }
+        } catch (e) {
+            gs.error('[LicenseUtilization] listConsumers failed for ' + table + ' / ' + query + ': ' + e)
+        }
+        return out
+    },
+
+    // Live consumed count for one category GlideRecord (source-based, else manual fallback).
+    consumedFor: function (catGr) {
+        var st = catGr.getValue('source_table')
+        if (st) {
+            return this.countConsumers(st, catGr.getValue('source_query'), catGr.getValue('consumer_ref_field'))
+        }
+        return parseInt(catGr.getValue('current_consumed') || '0', 10)
     },
 
     // Reusable server-side builder (also callable from server scripts / tests).
@@ -23,14 +75,25 @@ LicenseAnalytics.prototype = Object.extendsObject(global.AbstractAjaxProcessor, 
         gr.query()
         while (gr.next()) {
             var id = gr.getUniqueValue()
+            var st = gr.getValue('source_table')
+            var sq = gr.getValue('source_query')
+            var rf = gr.getValue('consumer_ref_field')
+            var rt = gr.getValue('consumer_table')
+            var consumers = st ? this.listConsumers(st, sq, rf, rt, this.LIST_LIMIT) : []
+            var consumed = this.consumedFor(gr)
             cats[id] = {
                 id: id,
                 name: gr.getValue('name') || '',
                 sku: gr.getValue('sku_code') || '',
                 capability: gr.getDisplayValue('capability') || '',
                 purchased: 0,
-                consumed: parseInt(gr.getValue('current_consumed') || '0', 10),
+                consumed: consumed,
                 utilization: 0,
+                source_table: st || '',
+                source_query: sq || '',
+                consumer_count: consumed,
+                consumers: consumers,
+                consumer_more: st ? (consumed > consumers.length) : false,
                 byMonth: {},
                 series: [],
             }
@@ -42,42 +105,30 @@ LicenseAnalytics.prototype = Object.extendsObject(global.AbstractAjaxProcessor, 
         pg.query()
         while (pg.next()) {
             var pcat = pg.getValue('category')
-            if (cats[pcat]) {
-                cats[pcat].purchased += parseInt(pg.getValue('licenses_purchased') || '0', 10)
-            }
+            if (cats[pcat]) { cats[pcat].purchased += parseInt(pg.getValue('licenses_purchased') || '0', 10) }
         }
 
-        // Monthly consumption snapshots. Also collect the raw rows (with sys_id) so the
-        // dashboard can show exactly which records back each number, for validation.
+        // Monthly consumption snapshots + raw rows.
         var monthsSet = {}
-        var records = []
         var cg = new GlideRecord(this.CON)
         cg.orderBy('category')
         cg.orderBy('period_month')
         cg.query()
         while (cg.next()) {
             var ccat = cg.getValue('category')
-            if (!cats[ccat]) continue
+            if (!cats[ccat]) { continue }
             var m = cg.getValue('period_month') || ''
-            var rowPurchased = parseInt(cg.getValue('purchased') || '0', 10)
-            var rowConsumed = parseInt(cg.getValue('consumed') || '0', 10)
-            var rowUtil = parseFloat(cg.getValue('utilization_pct') || '0')
             monthsSet[m] = true
-            cats[ccat].byMonth[m] = { month: m, purchased: rowPurchased, consumed: rowConsumed, utilization: rowUtil }
-            records.push({
-                sys_id: cg.getUniqueValue(),
-                category: cats[ccat].name,
+            cats[ccat].byMonth[m] = {
                 month: m,
-                purchased: rowPurchased,
-                consumed: rowConsumed,
-                utilization: rowUtil,
-                snapshot_date: cg.getDisplayValue('snapshot_date') || '',
-            })
+                purchased: parseInt(cg.getValue('purchased') || '0', 10),
+                consumed: parseInt(cg.getValue('consumed') || '0', 10),
+                utilization: parseFloat(cg.getValue('utilization_pct') || '0'),
+            }
         }
 
         var months = Object.keys(monthsSet).sort()
 
-        // Per-category series aligned to the global month axis + current utilization.
         var categories = []
         var totalPurchased = 0
         var totalConsumed = 0
@@ -94,25 +145,18 @@ LicenseAnalytics.prototype = Object.extendsObject(global.AbstractAjaxProcessor, 
             totalConsumed += c.consumed
         }
 
-        // Overall MoM series (summed across categories).
         var overall = []
         for (var k = 0; k < months.length; k++) {
             var mp = 0
             var mc = 0
             for (var q = 0; q < categories.length; q++) {
-                var pt = categories[q].series[k]
-                mp += pt.purchased
-                mc += pt.consumed
+                var ptn = categories[q].series[k]
+                mp += ptn.purchased
+                mc += ptn.consumed
             }
-            overall.push({
-                month: months[k],
-                purchased: mp,
-                consumed: mc,
-                utilization: mp > 0 ? this._round((mc / mp) * 100) : 0,
-            })
+            overall.push({ month: months[k], purchased: mp, consumed: mc, utilization: mp > 0 ? this._round((mc / mp) * 100) : 0 })
         }
 
-        // Month-over-month deltas (latest vs. previous month).
         var mom = { consumed_delta_pct: 0, utilization_delta: 0, has_prior: false }
         if (overall.length >= 2) {
             var cur = overall[overall.length - 1]
@@ -134,14 +178,10 @@ LicenseAnalytics.prototype = Object.extendsObject(global.AbstractAjaxProcessor, 
             overall_series: overall,
             mom: mom,
             categories: categories,
-            records: records,
-            consumption_table: this.CON,
         }
     },
 
-    _round: function (n) {
-        return Math.round(n * 100) / 100
-    },
+    _round: function (n) { return Math.round(n * 100) / 100 },
 
     type: 'LicenseAnalytics',
 })

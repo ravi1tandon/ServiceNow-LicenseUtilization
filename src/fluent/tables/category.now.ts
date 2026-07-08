@@ -24,8 +24,16 @@ export const x_1983_licutil_category = Table({
             },
         }),
         description: StringColumn({ label: 'Description', maxLength: 500 }),
-        // Live consumed count. Populated by an integration or admin; snapshotted monthly.
-        current_consumed: IntegerColumn({ label: 'Current Consumed' }),
+        // ── Consumer source (defines which real records "consume" this license) ──
+        // consumed is counted live from source_table + source_query. If consumer_ref_field
+        // is set (e.g. 'user' on sys_user_has_role), distinct values of that field are counted
+        // and used as the drill-down record; otherwise each source row is a consumer.
+        source_table: StringColumn({ label: 'Source Table', maxLength: 80 }),
+        source_query: StringColumn({ label: 'Source Encoded Query', maxLength: 1000 }),
+        consumer_ref_field: StringColumn({ label: 'Consumer Field', maxLength: 60 }),
+        consumer_table: StringColumn({ label: 'Consumer Table (for drill-down link)', maxLength: 80 }),
+        // Manual fallback used only when source_table is empty.
+        current_consumed: IntegerColumn({ label: 'Current Consumed (manual)' }),
         active: BooleanColumn({ label: 'Active', default: true }),
     },
 })

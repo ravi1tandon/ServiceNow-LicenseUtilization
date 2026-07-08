@@ -97,77 +97,191 @@ declare global {
                         table: 'sys_module'
                         id: '39a3ce4788fb42199e0e700a93d25943'
                     }
+                    seed_cat_biz: {
+                        table: 'x_1983_licutil_category'
+                        id: '90f6d0919a2241ebad27947c3dda139c'
+                    }
+                    seed_cat_disc: {
+                        table: 'x_1983_licutil_category'
+                        id: '914bb292c2594105b921d75b28becf32'
+                    }
+                    seed_cat_itil: {
+                        table: 'x_1983_licutil_category'
+                        id: '8c448574f599448fa5b4782bef4db3ea'
+                    }
+                    seed_cat_nowassist: {
+                        table: 'x_1983_licutil_category'
+                        id: 'cc2cd0a069b44781aeeae70be8cae32f'
+                    }
+                    seed_cat_pa: {
+                        table: 'x_1983_licutil_category'
+                        id: '65fc65328b5a4ee5a66d72281b7b1ddf'
+                    }
                     seed_cat_prem: {
                         table: 'x_1983_licutil_category'
                         id: 'f1b6a673f6364e98a910531f4a3e1efe'
+                        deleted: true
                     }
                     seed_cat_pro: {
                         table: 'x_1983_licutil_category'
                         id: 'ac9efa58a49044158bfa47acbb02829c'
+                        deleted: true
+                    }
+                    seed_cat_sam: {
+                        table: 'x_1983_licutil_category'
+                        id: 'c3b7519c88f24ee58f0852ce6a4043d5'
                     }
                     seed_cat_std: {
                         table: 'x_1983_licutil_category'
                         id: '4bb443a80c644bd791122835a537f872'
+                        deleted: true
+                    }
+                    seed_con_biz_05: {
+                        table: 'x_1983_licutil_consumption'
+                        id: '02064c2c9c6b4b9192a2d7a15fb8b44f'
+                    }
+                    seed_con_biz_06: {
+                        table: 'x_1983_licutil_consumption'
+                        id: 'b6f356f6294840dd9efe166de5e1c3cb'
+                    }
+                    seed_con_disc_05: {
+                        table: 'x_1983_licutil_consumption'
+                        id: '3c852d3b07c449ba9b2ec3dc3a63fbdf'
+                    }
+                    seed_con_disc_06: {
+                        table: 'x_1983_licutil_consumption'
+                        id: '877113ebed8c4aea8cbd97d53cedddbb'
+                    }
+                    seed_con_itil_05: {
+                        table: 'x_1983_licutil_consumption'
+                        id: 'f7cbc25a9c9548d9b5f747f33cb5d297'
+                    }
+                    seed_con_itil_06: {
+                        table: 'x_1983_licutil_consumption'
+                        id: 'a69c00d6d8e34e22b41e9739f061d78b'
+                    }
+                    seed_con_na_05: {
+                        table: 'x_1983_licutil_consumption'
+                        id: '2c65096889bb44db9f69449958ae4ae6'
+                    }
+                    seed_con_na_06: {
+                        table: 'x_1983_licutil_consumption'
+                        id: 'efa8d0fa02674ffaa028d32601b66d32'
+                    }
+                    seed_con_pa_05: {
+                        table: 'x_1983_licutil_consumption'
+                        id: '3d19bf694fe94ffd994a0b401989bdde'
+                    }
+                    seed_con_pa_06: {
+                        table: 'x_1983_licutil_consumption'
+                        id: '05902f6431774c469af4aa34db80d4a6'
                     }
                     seed_con_prem_03: {
                         table: 'x_1983_licutil_consumption'
                         id: '92162dd5dffb4e3987b0bb00f60d5b6e'
+                        deleted: true
                     }
                     seed_con_prem_04: {
                         table: 'x_1983_licutil_consumption'
                         id: 'fdfcdf9944aa4102b92b0954675a3027'
+                        deleted: true
                     }
                     seed_con_prem_05: {
                         table: 'x_1983_licutil_consumption'
                         id: 'ef0be53fa0e54d86999078909411a63c'
+                        deleted: true
                     }
                     seed_con_prem_06: {
                         table: 'x_1983_licutil_consumption'
                         id: '39ea4c35d94441dc815557b7ea38d48e'
+                        deleted: true
                     }
                     seed_con_pro_03: {
                         table: 'x_1983_licutil_consumption'
                         id: '63260f9e40bc49e2b46f265f0148ee47'
+                        deleted: true
                     }
                     seed_con_pro_04: {
                         table: 'x_1983_licutil_consumption'
                         id: '1964e7ac5f664ae3a45907ccb08a4362'
+                        deleted: true
                     }
                     seed_con_pro_05: {
                         table: 'x_1983_licutil_consumption'
                         id: 'f04a1017c90342de8271ca41314e9ba0'
+                        deleted: true
                     }
                     seed_con_pro_06: {
                         table: 'x_1983_licutil_consumption'
                         id: '3674851529e34feebb329f08f3662a0e'
+                        deleted: true
+                    }
+                    seed_con_sam_05: {
+                        table: 'x_1983_licutil_consumption'
+                        id: '09d9f2bda38e4b95896da3cf9a7d1e6f'
+                    }
+                    seed_con_sam_06: {
+                        table: 'x_1983_licutil_consumption'
+                        id: 'ad736d457d0c43e396271b4310d80e77'
                     }
                     seed_con_std_03: {
                         table: 'x_1983_licutil_consumption'
                         id: 'e3389ec26b084534aaa29e7361b99531'
+                        deleted: true
                     }
                     seed_con_std_04: {
                         table: 'x_1983_licutil_consumption'
                         id: 'ca850a59909b4393b2a0b341e6796a7f'
+                        deleted: true
                     }
                     seed_con_std_05: {
                         table: 'x_1983_licutil_consumption'
                         id: 'f1da1881e861469fa585564972a633a7'
+                        deleted: true
                     }
                     seed_con_std_06: {
                         table: 'x_1983_licutil_consumption'
                         id: '5b37ef2b96f64f50a13e917865045730'
+                        deleted: true
+                    }
+                    seed_pur_biz: {
+                        table: 'x_1983_licutil_purchase'
+                        id: '82d77c6b69c641048960bd322f0f4eb6'
+                    }
+                    seed_pur_disc: {
+                        table: 'x_1983_licutil_purchase'
+                        id: '78454f6385ea4bd3a3ce33114d11a7ae'
+                    }
+                    seed_pur_itil: {
+                        table: 'x_1983_licutil_purchase'
+                        id: '9167ac63cccf4eceab613715d448e4af'
+                    }
+                    seed_pur_nowassist: {
+                        table: 'x_1983_licutil_purchase'
+                        id: 'ebe2b3ee849c477ca09127a31692eb3d'
+                    }
+                    seed_pur_pa: {
+                        table: 'x_1983_licutil_purchase'
+                        id: '682324349a3a4d22af578a57c24411a8'
                     }
                     seed_pur_prem: {
                         table: 'x_1983_licutil_purchase'
                         id: '5e7d18155c794f3dbea770b6652975fc'
+                        deleted: true
                     }
                     seed_pur_pro: {
                         table: 'x_1983_licutil_purchase'
                         id: '67e0bce3777c4f4082f7939a52407dd2'
+                        deleted: true
+                    }
+                    seed_pur_sam: {
+                        table: 'x_1983_licutil_purchase'
+                        id: '07851e38bc704d22954b808c419d49d3'
                     }
                     seed_pur_std: {
                         table: 'x_1983_licutil_purchase'
                         id: 'fc9b39bb0737494ab17de0438045aa07'
+                        deleted: true
                     }
                     si_license_analytics: {
                         table: 'sys_script_include'
@@ -188,6 +302,14 @@ declare global {
                 }
                 composite: [
                     {
+                        table: 'sys_dictionary'
+                        id: '1570eac55278450f8756a10de6e3cc4c'
+                        key: {
+                            name: 'x_1983_licutil_category'
+                            element: 'source_table'
+                        }
+                    },
+                    {
                         table: 'sys_choice'
                         id: '1672a13746b1458d8f60e52cb68b7d36'
                         key: {
@@ -207,6 +329,14 @@ declare global {
                                     name: 'x_1983_licutil.viewer'
                                 }
                             }
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
+                        id: '1a62feec51c545f8886e4e35f1faa34b'
+                        key: {
+                            name: 'x_1983_licutil_category'
+                            element: 'consumer_ref_field'
                         }
                     },
                     {
@@ -284,6 +414,15 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_documentation'
+                        id: '3807d6daea1740ca99fd1614c995a1b7'
+                        key: {
+                            name: 'x_1983_licutil_category'
+                            element: 'consumer_ref_field'
+                            language: 'en'
+                        }
+                    },
+                    {
                         table: 'sys_user_role'
                         id: '3b37b2860c554b2c8a0a8e04d1f92451'
                         key: {
@@ -343,6 +482,14 @@ declare global {
                     },
                     {
                         table: 'sys_dictionary'
+                        id: '5add07f4dd7a4d60b71191a3f67a7871'
+                        key: {
+                            name: 'x_1983_licutil_category'
+                            element: 'source_query'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
                         id: '6360a1af0a1f4edf9518a541342b4d3c'
                         key: {
                             name: 'x_1983_licutil_consumption'
@@ -372,6 +519,15 @@ declare global {
                         id: '6e3743f7dd2540f590b454e15f24519e'
                         key: {
                             name: 'x_1983_licutil_category'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
+                        id: '6f8c448e7c684f3bb5742f95bd24c3d9'
+                        key: {
+                            name: 'x_1983_licutil_category'
+                            element: 'source_query'
+                            language: 'en'
                         }
                     },
                     {
@@ -472,6 +628,15 @@ declare global {
                         key: {
                             name: 'x_1983_licutil_category'
                             element: 'name'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
+                        id: '8e9893aacfd34bc8b60e0ba5c21a58ef'
+                        key: {
+                            name: 'x_1983_licutil_category'
+                            element: 'source_table'
+                            language: 'en'
                         }
                     },
                     {
@@ -732,6 +897,14 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_dictionary'
+                        id: 'cf6e13fae365411eb15cbfc1efad946b'
+                        key: {
+                            name: 'x_1983_licutil_category'
+                            element: 'consumer_table'
+                        }
+                    },
+                    {
                         table: 'sys_choice'
                         id: 'd650ce2ca2534452bad2de6f21709ba0'
                         key: {
@@ -796,6 +969,15 @@ declare global {
                         key: {
                             name: 'x_1983_licutil_purchase'
                             element: 'notes'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
+                        id: 'eb319b05b1bd4dc5bee5293da284d8b7'
+                        key: {
+                            name: 'x_1983_licutil_category'
+                            element: 'consumer_table'
+                            language: 'en'
                         }
                     },
                     {

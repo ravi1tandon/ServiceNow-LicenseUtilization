@@ -19,8 +19,11 @@ Portable: installs on any instance as a scoped app ("My Company Apps").
    Add a new category → a new widget appears on refresh. No dashboard edits required.
 4. **MoM history** — a monthly Scheduled Script snapshots purchased/consumed/utilization per
    category into `x_1983_licutil_consumption`, building the time series the trends draw from.
-5. **Source Records** — a dashboard tab listing the exact consumption records behind the
-   numbers, each linking to the real record, so users can validate the data.
+5. **Real consumer sources** — each category points at a **source table + encoded query**
+   (e.g. `sys_user_has_role` where `role.name=itil`, or `cmdb_ci_computer`). Consumed is
+   counted **live** from those records (distinct users where applicable).
+6. **Source Records** — a dashboard tab listing the **actual users/devices/records** consuming
+   each license, each linking to the real record, so users can validate every count.
 
 ## Documentation
 
