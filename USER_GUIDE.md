@@ -42,9 +42,15 @@ Navigator: **License Utilization → Configuration** (visible to admins only).
    - **Consumer Table** — the table the drill-down "Open" link points to (e.g. `sys_user`). Defaults to the source table.
    - **Count Mode** — `Record count` (default; 1 consumed per distinct record) or `Subscription units (ratio)` for ITOM/Discovery-style licensing.
    - **Source records per subscription unit** (`su_ratio`) — used when Count Mode is *Subscription units*. Consumed = `ceil(records ÷ ratio)`. Per ServiceNow: servers/VMs = **1**, PaaS/containers = **3**. Set to your contracted ratio.
+   - **Tier Group** — categories sharing the same non-empty value are **mutually exclusive**: a consumer is counted only in the *highest-precedence* category it matches. Leave blank to count the category independently.
+   - **Tier Precedence** — higher number wins within the Tier Group (e.g. ITIL `100` beats Business Stakeholder `10`).
    - **Current Consumed (manual)** — used **only** if Source Table is blank.
    - **Active** — leave checked to include it on the dashboard.
 3. **Save**. Consumed is now counted live from those records; a new category automatically gets its own card, trend line, and Source Records section — no dashboard edits needed.
+
+> **How consumers are counted (ServiceNow-aligned):**
+> - **Distinct consumers, any grant path.** For user-based sources the app counts **distinct users** on `sys_user_has_role`, which merges roles granted **directly, via group, or by role containment/inheritance** — so a user who holds a role both through a group *and* directly is one seat, not two. (Ref: [ServiceNow — Counting Licensed Users](https://www.servicenow.com/community/servicenow-ai-platform-articles/servicenow-subscription-usage-license-utilization-counting/ta-p/2321993).)
+> - **Highest tier wins.** Within a Tier Group, each user is counted once at the highest-precedence tier and excluded from lower ones — e.g. an **ITIL Fulfiller is not also counted as a Business Stakeholder**. The lower tier's tile *and* its Source Records list show the net set. Seeded: `ITIL (100)` and `Business Stakeholder (10)` in tier group `fulfiller_tier`; **Platform Analytics is independent** (a separate subscription) — add it to a tier group only if your contract subsumes it.
 
 #### Seeded examples (verified on this instance)
 

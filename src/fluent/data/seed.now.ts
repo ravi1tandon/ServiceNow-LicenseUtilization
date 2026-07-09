@@ -9,7 +9,7 @@ import { Record } from '@servicenow/sdk/core'
 // ── Categories (real license → real consumer source) ─────────────────────────
 const catItil = Record({
     $id: Now.ID['seed_cat_itil'], $meta: { installMethod: 'demo' }, table: 'x_1983_licutil_category',
-    data: { name: 'ITIL (Fulfiller)', sku_code: 'ITIL', capability: 'itsm', description: 'Fulfiller subscription — users with the itil role.', source_table: 'sys_user_has_role', source_query: 'role.name=itil', consumer_ref_field: 'user', consumer_table: 'sys_user', active: true },
+    data: { name: 'ITIL (Fulfiller)', sku_code: 'ITIL', capability: 'itsm', description: 'Fulfiller subscription — distinct users with the itil role (direct, via group, or inherited — sys_user_has_role merges all paths).', source_table: 'sys_user_has_role', source_query: 'role.name=itil', consumer_ref_field: 'user', consumer_table: 'sys_user', tier_group: 'fulfiller_tier', precedence: 100, active: true },
 })
 const catPa = Record({
     $id: Now.ID['seed_cat_pa'], $meta: { installMethod: 'demo' }, table: 'x_1983_licutil_category',
@@ -21,7 +21,7 @@ const catDisc = Record({
 })
 const catBiz = Record({
     $id: Now.ID['seed_cat_biz'], $meta: { installMethod: 'demo' }, table: 'x_1983_licutil_category',
-    data: { name: 'Business Stakeholder', sku_code: 'BIZ-STK', capability: 'other', description: 'Users with the business_stakeholder role.', source_table: 'sys_user_has_role', source_query: 'role.name=business_stakeholder', consumer_ref_field: 'user', consumer_table: 'sys_user', active: true },
+    data: { name: 'Business Stakeholder', sku_code: 'BIZ-STK', capability: 'other', description: 'Business Stakeholder subscription. Same tier group as ITIL but lower precedence, so a user who is also an itil Fulfiller is counted as ITIL, not here (ServiceNow highest-tier rule).', source_table: 'sys_user_has_role', source_query: 'role.name=business_stakeholder', consumer_ref_field: 'user', consumer_table: 'sys_user', tier_group: 'fulfiller_tier', precedence: 10, active: true },
 })
 const catSam = Record({
     $id: Now.ID['seed_cat_sam'], $meta: { installMethod: 'demo' }, table: 'x_1983_licutil_category',

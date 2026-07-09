@@ -44,6 +44,12 @@ export const x_1983_licutil_category = Table({
             },
         }),
         su_ratio: IntegerColumn({ label: 'Source records per subscription unit', default: 1 }),
+        // Tiering: categories sharing a non-empty Tier Group are mutually exclusive — each
+        // consumer (user/device) is counted only in the highest-Precedence category it matches,
+        // mirroring ServiceNow's "count once at the highest subscription" rule (e.g. a Fulfiller
+        // is not also counted as a Business Stakeholder). Empty Tier Group = counted independently.
+        tier_group: StringColumn({ label: 'Tier Group', maxLength: 60 }),
+        precedence: IntegerColumn({ label: 'Tier Precedence (higher wins)', default: 0 }),
         // Manual fallback used only when source_table is empty.
         current_consumed: IntegerColumn({ label: 'Current Consumed (manual)' }),
         active: BooleanColumn({ label: 'Active', default: true }),

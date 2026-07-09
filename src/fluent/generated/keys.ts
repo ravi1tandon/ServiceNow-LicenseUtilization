@@ -334,6 +334,15 @@ declare global {
                 }
                 composite: [
                     {
+                        table: 'sys_documentation'
+                        id: '0f006b8320014910b2e3d1024e05aca0'
+                        key: {
+                            name: 'x_1983_licutil_category'
+                            element: 'tier_group'
+                            language: 'en'
+                        }
+                    },
+                    {
                         table: 'sys_dictionary'
                         id: '1570eac55278450f8756a10de6e3cc4c'
                         key: {
@@ -442,6 +451,15 @@ declare global {
                         key: {
                             name: 'x_1983_licutil_consumption'
                             element: 'consumed'
+                            language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
+                        id: '351d70988ffe4211ab1c0da4188bd3d5'
+                        key: {
+                            name: 'x_1983_licutil_category'
+                            element: 'precedence'
                             language: 'en'
                         }
                     },
@@ -632,6 +650,14 @@ declare global {
                     },
                     {
                         table: 'sys_dictionary'
+                        id: '894ffe43f1684a9faea879d30c0a2b80'
+                        key: {
+                            name: 'x_1983_licutil_category'
+                            element: 'tier_group'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
                         id: '89fb821ff7554316945306bb688f28bc'
                         key: {
                             name: 'x_1983_licutil_consumption'
@@ -733,6 +759,14 @@ declare global {
                         key: {
                             name: 'x_1983_licutil_category'
                             element: 'current_consumed'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
+                        id: '9864689bef8942b0963f34940ad9e514'
+                        key: {
+                            name: 'x_1983_licutil_category'
+                            element: 'precedence'
                         }
                     },
                     {

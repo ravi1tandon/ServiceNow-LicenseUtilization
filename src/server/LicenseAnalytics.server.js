@@ -7,6 +7,7 @@ LicenseAnalytics.prototype = Object.extendsObject(global.AbstractAjaxProcessor, 
     PUR: 'x_1983_licutil_purchase',
     CON: 'x_1983_licutil_consumption',
     LIST_LIMIT: 100,
+    DEDUP_CAP: 5000, // max distinct consumers materialized per tier-group category for dedup
 
     // GlideAjax entry point. Returns the full dashboard payload as a JSON string.
     getDashboardData: function () {
@@ -100,10 +101,53 @@ LicenseAnalytics.prototype = Object.extendsObject(global.AbstractAjaxProcessor, 
         return { raw: manual, consumed: manual }
     },
 
-    // Reusable server-side builder (also callable from server scripts / tests).
-    buildPayload: function () {
-        var cats = {}
+    // Materialize the DISTINCT consumer set (capped) for a source, for cross-tier dedup.
+    // With refField, one entry per distinct field value (e.g. distinct users, covering direct +
+    // group + inherited grants that sys_user_has_role already merges); else one per source row.
+    distinctConsumers: function (table, query, refField, cap) {
+        var list = []
+        var capped = false
+        if (!table) { return { list: list, capped: capped } }
+        var limit = cap > 0 ? cap : this.DEDUP_CAP
+        try {
+            if (refField) {
+                var ga = new GlideAggregate(table)
+                if (query) { ga.addEncodedQuery(query) }
+                ga.groupBy(refField)
+                ga.query()
+                while (ga.next()) {
+                    var idv = ga.getValue(refField)
+                    if (!idv) { continue }
+                    if (list.length >= limit) { capped = true; break }
+                    list.push({ sys_id: idv, label: ga.getDisplayValue(refField) || idv })
+                }
+            } else {
+                var seen = {}
+                var g = new GlideRecord(table)
+                if (query) { g.addEncodedQuery(query) }
+                g.query()
+                while (g.next()) {
+                    var uid = g.getUniqueValue()
+                    if (seen[uid]) { continue }
+                    seen[uid] = 1
+                    if (list.length >= limit) { capped = true; break }
+                    list.push({ sys_id: uid, label: g.getDisplayValue() || uid })
+                }
+            }
+        } catch (e) {
+            gs.error('[LicenseUtilization] distinctConsumers failed for ' + table + ' / ' + query + ': ' + e)
+        }
+        return { list: list, capped: capped }
+    },
+
+    // Central engine: compute per-category consumed figures with tier-aware de-duplication.
+    // Categories sharing a non-empty tier_group are processed highest-precedence first; a consumer
+    // counted by a higher tier is removed from lower tiers (ServiceNow "highest subscription wins").
+    // Returns { map: {id:cat}, order: [id...] }. Used by both the dashboard and the snapshot job.
+    computeCategories: function () {
+        var map = {}
         var order = []
+        var tiers = {}
         var gr = new GlideRecord(this.CAT)
         gr.addActiveQuery()
         gr.orderBy('capability')
@@ -111,34 +155,98 @@ LicenseAnalytics.prototype = Object.extendsObject(global.AbstractAjaxProcessor, 
         gr.query()
         while (gr.next()) {
             var id = gr.getUniqueValue()
-            var st = gr.getValue('source_table')
-            var sq = gr.getValue('source_query')
-            var rf = gr.getValue('consumer_ref_field')
-            var rt = gr.getValue('consumer_table')
-            var consumers = st ? this.listConsumers(st, sq, rf, rt, this.LIST_LIMIT) : []
-            var fig = this.consumedFor(gr)
-            var mode = gr.getValue('count_mode') || 'records'
-            var ratio = parseInt(gr.getValue('su_ratio') || '1', 10)
-            cats[id] = {
+            var c = {
                 id: id,
                 name: gr.getValue('name') || '',
                 sku: gr.getValue('sku_code') || '',
                 capability: gr.getDisplayValue('capability') || '',
-                purchased: 0,
-                consumed: fig.consumed,
-                raw_count: fig.raw,
-                count_mode: mode,
-                su_ratio: ratio,
-                utilization: 0,
-                source_table: st || '',
-                source_query: sq || '',
-                consumer_count: fig.raw,
-                consumers: consumers,
-                consumer_more: st ? (fig.raw > consumers.length) : false,
-                byMonth: {},
-                series: [],
+                source_table: gr.getValue('source_table') || '',
+                source_query: gr.getValue('source_query') || '',
+                consumer_ref_field: gr.getValue('consumer_ref_field') || '',
+                consumer_table: gr.getValue('consumer_table') || '',
+                count_mode: gr.getValue('count_mode') || 'records',
+                su_ratio: parseInt(gr.getValue('su_ratio') || '1', 10),
+                tier_group: gr.getValue('tier_group') || '',
+                precedence: parseInt(gr.getValue('precedence') || '0', 10),
+                _manual: parseInt(gr.getValue('current_consumed') || '0', 10),
             }
+            map[id] = c
             order.push(id)
+            if (c.tier_group) { (tiers[c.tier_group] = tiers[c.tier_group] || []).push(c) }
+        }
+
+        // Tier-group categories: fetch full distinct sets and claim consumers top-down.
+        for (var tg in tiers) {
+            var arr = tiers[tg].sort(function (a, b) { return b.precedence - a.precedence })
+            var claimed = {}
+            for (var ti = 0; ti < arr.length; ti++) {
+                var tc = arr[ti]
+                var res = tc.source_table
+                    ? this.distinctConsumers(tc.source_table, tc.source_query, tc.consumer_ref_field, this.DEDUP_CAP)
+                    : { list: [], capped: false }
+                var net = []
+                for (var ri = 0; ri < res.list.length; ri++) {
+                    var entry = res.list[ri]
+                    if (!claimed[entry.sys_id]) { claimed[entry.sys_id] = 1; net.push(entry) }
+                }
+                tc._net = net
+                tc._capped = res.capped
+                tc._tiered = true
+            }
+        }
+
+        // Finalize figures for every category.
+        for (var oi = 0; oi < order.length; oi++) {
+            var o = map[order[oi]]
+            var listOut = []
+            var li
+            if (o._tiered) {
+                var rawNet = o._net.length
+                for (li = 0; li < o._net.length && li < this.LIST_LIMIT; li++) {
+                    listOut.push({ sys_id: o._net[li].sys_id, label: o._net[li].label, table: o.consumer_table || o.source_table })
+                }
+                o.raw_count = rawNet
+                o.consumed = this.toConsumed(rawNet, o.count_mode, o.su_ratio)
+                o.consumer_count = rawNet
+                o.consumers = listOut
+                o.consumer_more = o._capped || rawNet > listOut.length
+                o.tier_note = 'Counted once at highest tier in group "' + o.tier_group + '" (precedence ' + o.precedence + '); users already counted in a higher tier are excluded here.'
+            } else if (o.source_table) {
+                var raw = this.countConsumers(o.source_table, o.source_query, o.consumer_ref_field)
+                o.raw_count = raw
+                o.consumed = this.toConsumed(raw, o.count_mode, o.su_ratio)
+                o.consumer_count = raw
+                o.consumers = this.listConsumers(o.source_table, o.source_query, o.consumer_ref_field, o.consumer_table, this.LIST_LIMIT)
+                o.consumer_more = raw > o.consumers.length
+                o.tier_note = ''
+            } else {
+                o.raw_count = o._manual
+                o.consumed = o._manual
+                o.consumer_count = o._manual
+                o.consumers = []
+                o.consumer_more = false
+                o.tier_note = ''
+            }
+            delete o._net
+            delete o._capped
+            delete o._tiered
+            delete o._manual
+            delete o.consumer_ref_field
+        }
+        return { map: map, order: order }
+    },
+
+    // Reusable server-side builder (also callable from server scripts / tests).
+    buildPayload: function () {
+        var computed = this.computeCategories()
+        var cats = computed.map
+        var order = computed.order
+        for (var oi = 0; oi < order.length; oi++) {
+            var cinit = cats[order[oi]]
+            cinit.purchased = 0
+            cinit.utilization = 0
+            cinit.byMonth = {}
+            cinit.series = []
         }
 
         // Purchased totals per category.

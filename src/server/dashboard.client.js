@@ -139,6 +139,7 @@ function licRenderRecords(d) {
         html += '<div class="lic-muted">' + licNum(c.consumer_count) + ' consumer(s) · source: <code>' + licEsc(c.source_table) + '</code>'
         html += c.source_query ? (' · <code>' + licEsc(c.source_query) + '</code>') : ''
         html += ' · <a href="' + listUrl + '" target="_blank" rel="noopener">Open full list</a></div>'
+        if (c.tier_note) { html += '<div class="lic-muted" style="color:#8a2be2">ⓘ ' + licEsc(c.tier_note) + '</div>' }
         var cons = c.consumers || []
         if (cons.length) {
             html += '<table class="lic-tbl"><thead><tr><th>Consumer</th><th></th></tr></thead><tbody>'
