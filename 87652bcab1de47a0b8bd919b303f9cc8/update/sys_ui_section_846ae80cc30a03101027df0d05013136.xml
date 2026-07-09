@@ -4,13 +4,13 @@
             <element>description</element>
             <position>0</position>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-07-08 02:23:00</sys_created_on>
-            <sys_id>046ae80cc30a03101027df0d050131d4</sys_id>
+            <sys_created_on>2026-07-09 12:32:15</sys_created_on>
+            <sys_id>526f3f98c34207101027df0d050131dc</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_ui_formatter/>
             <sys_ui_section caption="NULL" display_value="" name="x_1983_licutil_category" sys_domain="global" view="Default view">846ae80cc30a03101027df0d05013136</sys_ui_section>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-07-08 02:23:00</sys_updated_on>
+            <sys_updated_on>2026-07-09 12:32:15</sys_updated_on>
             <sys_user/>
             <type/>
         </sys_ui_element>
@@ -18,13 +18,13 @@
             <element>.begin_split</element>
             <position>1</position>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-07-08 02:23:00</sys_created_on>
-            <sys_id>cc6ae80cc30a03101027df0d050131d4</sys_id>
+            <sys_created_on>2026-07-09 12:32:15</sys_created_on>
+            <sys_id>566f3f98c34207101027df0d050131dd</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_ui_formatter/>
             <sys_ui_section caption="NULL" display_value="" name="x_1983_licutil_category" sys_domain="global" view="Default view">846ae80cc30a03101027df0d05013136</sys_ui_section>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-07-08 02:23:00</sys_updated_on>
+            <sys_updated_on>2026-07-09 12:32:15</sys_updated_on>
             <sys_user/>
             <type>.begin_split</type>
         </sys_ui_element>
@@ -32,13 +32,13 @@
             <element>sku_code</element>
             <position>2</position>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-07-08 02:23:00</sys_created_on>
-            <sys_id>886ae80cc30a03101027df0d050131d5</sys_id>
+            <sys_created_on>2026-07-09 12:32:15</sys_created_on>
+            <sys_id>126f3f98c34207101027df0d050131de</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_ui_formatter/>
             <sys_ui_section caption="NULL" display_value="" name="x_1983_licutil_category" sys_domain="global" view="Default view">846ae80cc30a03101027df0d05013136</sys_ui_section>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-07-08 02:23:00</sys_updated_on>
+            <sys_updated_on>2026-07-09 12:32:15</sys_updated_on>
             <sys_user/>
             <type/>
         </sys_ui_element>
@@ -46,13 +46,13 @@
             <element>.split</element>
             <position>3</position>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-07-08 02:23:00</sys_created_on>
-            <sys_id>446ae80cc30a03101027df0d050131d6</sys_id>
+            <sys_created_on>2026-07-09 12:32:15</sys_created_on>
+            <sys_id>da6f3f98c34207101027df0d050131de</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_ui_formatter/>
             <sys_ui_section caption="NULL" display_value="" name="x_1983_licutil_category" sys_domain="global" view="Default view">846ae80cc30a03101027df0d05013136</sys_ui_section>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-07-08 02:23:00</sys_updated_on>
+            <sys_updated_on>2026-07-09 12:32:15</sys_updated_on>
             <sys_user/>
             <type>.split</type>
         </sys_ui_element>
@@ -60,13 +60,13 @@
             <element>capability</element>
             <position>4</position>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-07-08 02:23:00</sys_created_on>
-            <sys_id>006ae80cc30a03101027df0d050131d7</sys_id>
+            <sys_created_on>2026-07-09 12:32:15</sys_created_on>
+            <sys_id>966f3f98c34207101027df0d050131df</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_ui_formatter/>
             <sys_ui_section caption="NULL" display_value="" name="x_1983_licutil_category" sys_domain="global" view="Default view">846ae80cc30a03101027df0d05013136</sys_ui_section>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-07-08 02:23:00</sys_updated_on>
+            <sys_updated_on>2026-07-09 12:32:15</sys_updated_on>
             <sys_user/>
             <type/>
         </sys_ui_element>
@@ -74,13 +74,13 @@
             <element>.end_split</element>
             <position>5</position>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-07-08 02:23:00</sys_created_on>
-            <sys_id>c86ae80cc30a03101027df0d050131d7</sys_id>
+            <sys_created_on>2026-07-09 12:32:15</sys_created_on>
+            <sys_id>526f3f98c34207101027df0d050131e0</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_ui_formatter/>
             <sys_ui_section caption="NULL" display_value="" name="x_1983_licutil_category" sys_domain="global" view="Default view">846ae80cc30a03101027df0d05013136</sys_ui_section>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-07-08 02:23:00</sys_updated_on>
+            <sys_updated_on>2026-07-09 12:32:15</sys_updated_on>
             <sys_user/>
             <type>.end_split</type>
         </sys_ui_element>
@@ -88,13 +88,13 @@
             <element>name</element>
             <position>6</position>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-07-08 02:23:00</sys_created_on>
-            <sys_id>846ae80cc30a03101027df0d050131d8</sys_id>
+            <sys_created_on>2026-07-09 12:32:15</sys_created_on>
+            <sys_id>1e6f3f98c34207101027df0d050131e0</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_ui_formatter/>
             <sys_ui_section caption="NULL" display_value="" name="x_1983_licutil_category" sys_domain="global" view="Default view">846ae80cc30a03101027df0d05013136</sys_ui_section>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-07-08 02:23:00</sys_updated_on>
+            <sys_updated_on>2026-07-09 12:32:15</sys_updated_on>
             <sys_user/>
             <type/>
         </sys_ui_element>
@@ -102,13 +102,13 @@
             <element>.begin_split</element>
             <position>7</position>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-07-08 02:23:00</sys_created_on>
-            <sys_id>406ae80cc30a03101027df0d050131d9</sys_id>
+            <sys_created_on>2026-07-09 12:32:15</sys_created_on>
+            <sys_id>d66f3f98c34207101027df0d050131e1</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_ui_formatter/>
             <sys_ui_section caption="NULL" display_value="" name="x_1983_licutil_category" sys_domain="global" view="Default view">846ae80cc30a03101027df0d05013136</sys_ui_section>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-07-08 02:23:00</sys_updated_on>
+            <sys_updated_on>2026-07-09 12:32:15</sys_updated_on>
             <sys_user/>
             <type>.begin_split</type>
         </sys_ui_element>
@@ -116,13 +116,13 @@
             <element>current_consumed</element>
             <position>8</position>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-07-08 02:23:00</sys_created_on>
-            <sys_id>0c6ae80cc30a03101027df0d050131d9</sys_id>
+            <sys_created_on>2026-07-09 12:32:15</sys_created_on>
+            <sys_id>926f3f98c34207101027df0d050131e2</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_ui_formatter/>
             <sys_ui_section caption="NULL" display_value="" name="x_1983_licutil_category" sys_domain="global" view="Default view">846ae80cc30a03101027df0d05013136</sys_ui_section>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-07-08 02:23:00</sys_updated_on>
+            <sys_updated_on>2026-07-09 12:32:15</sys_updated_on>
             <sys_user/>
             <type/>
         </sys_ui_element>
@@ -130,13 +130,13 @@
             <element>.split</element>
             <position>9</position>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-07-08 02:23:00</sys_created_on>
-            <sys_id>c46ae80cc30a03101027df0d050131da</sys_id>
+            <sys_created_on>2026-07-09 12:32:15</sys_created_on>
+            <sys_id>5e6f3f98c34207101027df0d050131e2</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_ui_formatter/>
             <sys_ui_section caption="NULL" display_value="" name="x_1983_licutil_category" sys_domain="global" view="Default view">846ae80cc30a03101027df0d05013136</sys_ui_section>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-07-08 02:23:00</sys_updated_on>
+            <sys_updated_on>2026-07-09 12:32:15</sys_updated_on>
             <sys_user/>
             <type>.split</type>
         </sys_ui_element>
@@ -144,13 +144,13 @@
             <element>active</element>
             <position>10</position>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-07-08 02:23:00</sys_created_on>
-            <sys_id>806ae80cc30a03101027df0d050131db</sys_id>
+            <sys_created_on>2026-07-09 12:32:15</sys_created_on>
+            <sys_id>1a6f3f98c34207101027df0d050131e3</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_ui_formatter/>
             <sys_ui_section caption="NULL" display_value="" name="x_1983_licutil_category" sys_domain="global" view="Default view">846ae80cc30a03101027df0d05013136</sys_ui_section>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-07-08 02:23:00</sys_updated_on>
+            <sys_updated_on>2026-07-09 12:32:15</sys_updated_on>
             <sys_user/>
             <type/>
         </sys_ui_element>
@@ -158,15 +158,127 @@
             <element>.end_split</element>
             <position>11</position>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-07-08 02:23:00</sys_created_on>
-            <sys_id>4c6ae80cc30a03101027df0d050131db</sys_id>
+            <sys_created_on>2026-07-09 12:32:15</sys_created_on>
+            <sys_id>d26f3f98c34207101027df0d050131e4</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_ui_formatter/>
             <sys_ui_section caption="NULL" display_value="" name="x_1983_licutil_category" sys_domain="global" view="Default view">846ae80cc30a03101027df0d05013136</sys_ui_section>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-07-08 02:23:00</sys_updated_on>
+            <sys_updated_on>2026-07-09 12:32:15</sys_updated_on>
             <sys_user/>
             <type>.end_split</type>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>consumer_ref_field</element>
+            <position>12</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-07-09 12:32:15</sys_created_on>
+            <sys_id>9e6f3f98c34207101027df0d050131e4</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_1983_licutil_category" sys_domain="global" view="Default view">846ae80cc30a03101027df0d05013136</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-07-09 12:32:15</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>consumer_table</element>
+            <position>13</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-07-09 12:32:15</sys_created_on>
+            <sys_id>5a6f3f98c34207101027df0d050131e5</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_1983_licutil_category" sys_domain="global" view="Default view">846ae80cc30a03101027df0d05013136</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-07-09 12:32:15</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>count_mode</element>
+            <position>14</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-07-09 12:32:15</sys_created_on>
+            <sys_id>166f3f98c34207101027df0d050131e6</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_1983_licutil_category" sys_domain="global" view="Default view">846ae80cc30a03101027df0d05013136</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-07-09 12:32:15</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>sys_created_on</element>
+            <position>15</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-07-09 12:32:15</sys_created_on>
+            <sys_id>de6f3f98c34207101027df0d050131e6</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_1983_licutil_category" sys_domain="global" view="Default view">846ae80cc30a03101027df0d05013136</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-07-09 12:32:15</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>sys_created_by</element>
+            <position>16</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-07-09 12:32:15</sys_created_on>
+            <sys_id>9a6f3f98c34207101027df0d050131e7</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_1983_licutil_category" sys_domain="global" view="Default view">846ae80cc30a03101027df0d05013136</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-07-09 12:32:15</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>source_query</element>
+            <position>17</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-07-09 12:32:15</sys_created_on>
+            <sys_id>566f3f98c34207101027df0d050131e8</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_1983_licutil_category" sys_domain="global" view="Default view">846ae80cc30a03101027df0d05013136</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-07-09 12:32:15</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>source_table</element>
+            <position>18</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-07-09 12:32:15</sys_created_on>
+            <sys_id>126f3f98c34207101027df0d050131e9</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_1983_licutil_category" sys_domain="global" view="Default view">846ae80cc30a03101027df0d05013136</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-07-09 12:32:15</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>su_ratio</element>
+            <position>19</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-07-09 12:32:15</sys_created_on>
+            <sys_id>da6f3f98c34207101027df0d050131e9</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="NULL" display_value="" name="x_1983_licutil_category" sys_domain="global" view="Default view">846ae80cc30a03101027df0d05013136</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-07-09 12:32:15</sys_updated_on>
+            <sys_user/>
+            <type/>
         </sys_ui_element>
         <sys_ui_section action="INSERT_OR_UPDATE">
             <caption/>

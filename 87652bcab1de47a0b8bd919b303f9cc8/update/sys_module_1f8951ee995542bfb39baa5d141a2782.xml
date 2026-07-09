@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?><record_update table="sys_module">
     <sys_module action="INSERT_OR_UPDATE">
         <content><![CDATA[// Monthly license-consumption snapshot.
-// For each active category, records purchased (sum of purchase records) and consumed
-// (live count of the real consumer records defined by the category's source query) for the
-// current YYYY-MM. Upserts, so re-running in the same month refreshes the row. Builds MoM history.
+// For each active category, records purchased (sum of purchase records) and consumed for the
+// current YYYY-MM. Consumed comes from LicenseAnalytics.computeCategories(), so it uses the
+// SAME tier-aware, de-duplicated counts as the dashboard (a user counted at a higher tier is
+// not re-counted at a lower one). Upserts, so re-running in the same month refreshes the row.
 ;(function runSnapshot() {
-    var CAT = 'x_1983_licutil_category'
     var PUR = 'x_1983_licutil_purchase'
     var CON = 'x_1983_licutil_consumption'
 
     var analytics = new x_1983_licutil.LicenseAnalytics()
+    var computed = analytics.computeCategories() // { map, order } with deduped consumed
     var now = new GlideDateTime()
     var period = now.getValue().substring(0, 7) // 'YYYY-MM' (UTC internal)
     var today = now.getDate().getValue() // 'YYYY-MM-DD'
@@ -24,13 +25,10 @@
     }
 
     var processed = 0
-    var cat = new GlideRecord(CAT)
-    cat.addActiveQuery()
-    cat.query()
-    while (cat.next()) {
-        var catId = cat.getUniqueValue()
+    for (var i = 0; i < computed.order.length; i++) {
+        var catId = computed.order[i]
+        var consumed = computed.map[catId].consumed
         var purchased = sumPurchased(catId)
-        var consumed = analytics.consumedFor(cat).consumed // live consumed units (SU-adjusted)
         var util = purchased > 0 ? Math.round((consumed / purchased) * 10000) / 100 : 0
 
         var snap = new GlideRecord(CON)
