@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element db_object_id="280ed840c3c603101027df0d0501310b" label="License Purchase" max_length="40" name="x_1983_licutil_purchase" type="collection">
+        <element label="Licenses Purchased" mandatory="true" max_length="40" name="licenses_purchased" type="integer"/>
+        <element label="Purchase Date" max_length="40" name="purchase_date" type="glide_date"/>
+        <element label="Contract Period" max_length="40" name="period" type="string"/>
+        <element display="true" label="Category" mandatory="true" max_length="32" name="category" reference="x_1983_licutil_category" reference_cascade_rule="delete" type="reference"/>
+        <element label="Notes" max_length="500" name="notes" type="string"/>
+        <index name="index">
+            <element name="category"/>
+        </index>
+    </element>
+</database>

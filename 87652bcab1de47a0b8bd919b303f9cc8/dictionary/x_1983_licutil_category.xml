@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element db_object_id="180e9840c3c603101027df0d05013117" label="License Category" max_length="40" name="x_1983_licutil_category" type="collection">
+        <element label="Tier Group" max_length="60" name="tier_group" type="string"/>
+        <element default="records" label="Count Mode" max_length="40" name="count_mode" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Subscription units (ratio)" sequence="2" value="subscription_units"/>
+                <element inactive_on_update="false" label="Record count" sequence="1" value="records"/>
+            </choice>
+        </element>
+        <element label="Consumer Field" max_length="60" name="consumer_ref_field" type="string"/>
+        <element label="Consumer Table (for drill-down link)" max_length="80" name="consumer_table" type="string"/>
+        <element label="Description" max_length="500" name="description" type="string"/>
+        <element label="SKU Code" max_length="60" name="sku_code" type="string"/>
+        <element label="Source Encoded Query" max_length="1000" name="source_query" type="string"/>
+        <element label="Source Table" max_length="80" name="source_table" type="string"/>
+        <element default="1" label="Source records per subscription unit" max_length="40" name="su_ratio" type="integer"/>
+        <element default="platform_analytics" label="Capability" max_length="40" name="capability" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="ITOM" sequence="3" value="itom"/>
+                <element inactive_on_update="false" label="ITSM" sequence="2" value="itsm"/>
+                <element inactive_on_update="false" label="Security Operations" sequence="6" value="secops"/>
+                <element inactive_on_update="false" label="Other" sequence="7" value="other"/>
+                <element inactive_on_update="false" label="Platform Analytics" sequence="1" value="platform_analytics"/>
+                <element inactive_on_update="false" label="HRSD" sequence="4" value="hrsd"/>
+                <element inactive_on_update="false" label="CSM" sequence="5" value="csm"/>
+            </choice>
+        </element>
+        <element display="true" label="Name" mandatory="true" max_length="100" name="name" type="string"/>
+        <element default="0" label="Tier Precedence (higher wins)" max_length="40" name="precedence" type="integer"/>
+        <element label="Current Consumed (manual)" max_length="40" name="current_consumed" type="integer"/>
+        <element default="true" label="Active" max_length="40" name="active" type="boolean"/>
+    </element>
+</database>

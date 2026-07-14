@@ -6,7 +6,6 @@
             <sys_class_name>sys_choice_set</sys_class_name>
             <sys_created_by>admin</sys_created_by>
             <sys_created_on>2026-07-08 01:28:58</sys_created_on>
-            <sys_id>d80e9840c3c603101027df0d05013195</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_name>capability</sys_name>
             <sys_package display_value="License Utilization Dashboard" source="x_1983_licutil">87652bcab1de47a0b8bd919b303f9cc8</sys_package>
@@ -27,13 +26,12 @@
             <sequence>1</sequence>
             <synonyms/>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-07-09 13:23:38</sys_created_on>
+            <sys_created_on>2026-07-14 18:23:24</sys_created_on>
             <sys_domain>global</sys_domain>
             <sys_domain_path>/</sys_domain_path>
-            <sys_id>c8231d60c58d4c6ab96ea550e4af2e8d</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-07-09 13:23:38</sys_updated_on>
+            <sys_updated_on>2026-07-14 18:23:24</sys_updated_on>
             <value>platform_analytics</value>
         </sys_choice>
         <sys_choice action="INSERT_OR_UPDATE">
@@ -47,13 +45,12 @@
             <sequence>2</sequence>
             <synonyms/>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-07-09 13:23:38</sys_created_on>
+            <sys_created_on>2026-07-14 18:23:24</sys_created_on>
             <sys_domain>global</sys_domain>
             <sys_domain_path>/</sys_domain_path>
-            <sys_id>7742ca372a934cb38e97b88a78b995e1</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-07-09 13:23:38</sys_updated_on>
+            <sys_updated_on>2026-07-14 18:23:24</sys_updated_on>
             <value>itsm</value>
         </sys_choice>
         <sys_choice action="INSERT_OR_UPDATE">
@@ -67,13 +64,12 @@
             <sequence>3</sequence>
             <synonyms/>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-07-09 13:23:38</sys_created_on>
+            <sys_created_on>2026-07-14 18:23:24</sys_created_on>
             <sys_domain>global</sys_domain>
             <sys_domain_path>/</sys_domain_path>
-            <sys_id>1672a13746b1458d8f60e52cb68b7d36</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-07-09 13:23:38</sys_updated_on>
+            <sys_updated_on>2026-07-14 18:23:24</sys_updated_on>
             <value>itom</value>
         </sys_choice>
         <sys_choice action="INSERT_OR_UPDATE">
@@ -87,13 +83,12 @@
             <sequence>4</sequence>
             <synonyms/>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-07-09 13:23:38</sys_created_on>
+            <sys_created_on>2026-07-14 18:23:24</sys_created_on>
             <sys_domain>global</sys_domain>
             <sys_domain_path>/</sys_domain_path>
-            <sys_id>d650ce2ca2534452bad2de6f21709ba0</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-07-09 13:23:38</sys_updated_on>
+            <sys_updated_on>2026-07-14 18:23:24</sys_updated_on>
             <value>hrsd</value>
         </sys_choice>
         <sys_choice action="INSERT_OR_UPDATE">
@@ -107,13 +102,12 @@
             <sequence>5</sequence>
             <synonyms/>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-07-09 13:23:38</sys_created_on>
+            <sys_created_on>2026-07-14 18:23:24</sys_created_on>
             <sys_domain>global</sys_domain>
             <sys_domain_path>/</sys_domain_path>
-            <sys_id>fe133d59bb2e4726b5d30e4fde0cc616</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-07-09 13:23:38</sys_updated_on>
+            <sys_updated_on>2026-07-14 18:23:24</sys_updated_on>
             <value>csm</value>
         </sys_choice>
         <sys_choice action="INSERT_OR_UPDATE">
@@ -127,13 +121,12 @@
             <sequence>6</sequence>
             <synonyms/>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-07-09 13:23:38</sys_created_on>
+            <sys_created_on>2026-07-14 18:23:24</sys_created_on>
             <sys_domain>global</sys_domain>
             <sys_domain_path>/</sys_domain_path>
-            <sys_id>93ed39c269f34e1db860b5ba8f4cc8c6</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-07-09 13:23:38</sys_updated_on>
+            <sys_updated_on>2026-07-14 18:23:24</sys_updated_on>
             <value>secops</value>
         </sys_choice>
         <sys_choice action="INSERT_OR_UPDATE">
@@ -147,13 +140,12 @@
             <sequence>7</sequence>
             <synonyms/>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-07-09 13:23:38</sys_created_on>
+            <sys_created_on>2026-07-14 18:23:24</sys_created_on>
             <sys_domain>global</sys_domain>
             <sys_domain_path>/</sys_domain_path>
-            <sys_id>b6c46ab7c7d849c693701f2727c4ebdc</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-07-09 13:23:38</sys_updated_on>
+            <sys_updated_on>2026-07-14 18:23:24</sys_updated_on>
             <value>other</value>
         </sys_choice>
     </sys_choice>

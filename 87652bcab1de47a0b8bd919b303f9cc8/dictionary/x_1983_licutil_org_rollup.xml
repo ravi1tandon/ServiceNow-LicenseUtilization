@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element db_object_id="131df28ac30243501027df0d0501317d" label="License Org Rollup" max_length="40" name="x_1983_licutil_org_rollup" type="collection">
+        <element label="Category" max_length="32" name="category" reference="x_1983_licutil_category" reference_cascade_rule="delete" type="reference"/>
+        <element label="Snapshot Date" max_length="40" name="snapshot_date" type="glide_date"/>
+        <element label="Manager" max_length="32" name="manager" reference="sys_user" reference_cascade_rule="delete" type="reference"/>
+        <element label="Licensed Users" max_length="40" name="licensed_users" type="integer"/>
+        <element label="Population (in scope)" max_length="40" name="population" type="integer"/>
+        <element default="manager" label="Scope" max_length="40" name="subject_type" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Reports to (manager)" sequence="1" value="manager"/>
+                <element inactive_on_update="false" label="Department" sequence="2" value="department"/>
+            </choice>
+        </element>
+        <element label="Department" max_length="32" name="department" reference="cmn_department" reference_cascade_rule="delete" type="reference"/>
+        <element label="Month (YYYY-MM)" max_length="7" name="period_month" type="string"/>
+        <element display="true" label="Subject" max_length="150" name="subject_label" type="string"/>
+        <index name="index">
+            <element name="category"/>
+        </index>
+        <index name="index2">
+            <element name="department"/>
+        </index>
+        <index name="index3">
+            <element name="manager"/>
+        </index>
+    </element>
+</database>

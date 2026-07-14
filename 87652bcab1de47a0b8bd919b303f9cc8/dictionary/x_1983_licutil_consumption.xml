@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element db_object_id="580e9840c3c603101027df0d050131cd" label="License Consumption" max_length="40" name="x_1983_licutil_consumption" type="collection">
+        <element label="Snapshot Date" max_length="40" name="snapshot_date" type="glide_date"/>
+        <element label="Purchased" max_length="40" name="purchased" type="integer"/>
+        <element label="Consumed" max_length="40" name="consumed" type="integer"/>
+        <element label="Category" mandatory="true" max_length="32" name="category" reference="x_1983_licutil_category" reference_cascade_rule="delete" type="reference"/>
+        <element display="true" label="Month (YYYY-MM)" mandatory="true" max_length="7" name="period_month" type="string"/>
+        <element label="Utilization %" max_length="20" name="utilization_pct" type="decimal"/>
+        <index name="index">
+            <element name="category"/>
+        </index>
+    </element>
+</database>
