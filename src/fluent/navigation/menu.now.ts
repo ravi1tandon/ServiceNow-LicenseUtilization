@@ -45,6 +45,22 @@ Record({
     },
 })
 
+// Published org/department license rollup (viewer + admin).
+Record({
+    $id: Now.ID['mod_org_rollup'],
+    table: 'sys_app_module',
+    data: {
+        title: 'Org & Department Rollup',
+        application: licMenu,
+        link_type: 'LIST',
+        name: 'x_1983_licutil_org_rollup',
+        hint: 'License counts by reporting line and department (auto-published monthly)',
+        roles: [VIEWER, ADMIN],
+        active: true,
+        order: 250,
+    },
+})
+
 // ── Administration (admin only) ──────────────────────────────────────────────
 Record({
     $id: Now.ID['mod_sep_admin'],

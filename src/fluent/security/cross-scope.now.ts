@@ -25,6 +25,16 @@ CrossScopePrivilege({
     targetType: 'sys_db_object',
 })
 
+// cmn_department — department rollup (department head, members).
+CrossScopePrivilege({
+    $id: Now.ID['xsp_cmn_department'],
+    operation: 'read',
+    status: 'allowed',
+    targetName: 'cmn_department',
+    targetScope: 'global',
+    targetType: 'sys_db_object',
+})
+
 // cmdb_ci_computer / cmdb_ci_server — device-based consumers (Discovery).
 CrossScopePrivilege({
     $id: Now.ID['xsp_cmdb_computer'],

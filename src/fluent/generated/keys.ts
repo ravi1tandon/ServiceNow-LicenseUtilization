@@ -57,6 +57,22 @@ declare global {
                         table: 'sys_security_acl'
                         id: '7bfb4f351016408186982810a59bb3b2'
                     }
+                    acl_rollup_create: {
+                        table: 'sys_security_acl'
+                        id: '04f702aca16047f78a32edcca925e095'
+                    }
+                    acl_rollup_delete: {
+                        table: 'sys_security_acl'
+                        id: 'e6633ffef6514ba4a4ef03c4cfd347ce'
+                    }
+                    acl_rollup_read: {
+                        table: 'sys_security_acl'
+                        id: 'df08c5a1ff894a128313e3e943b77ec5'
+                    }
+                    acl_rollup_write: {
+                        table: 'sys_security_acl'
+                        id: '96bb10740f414a55951aa0b899c0237c'
+                    }
                     bom_json: {
                         table: 'sys_module'
                         id: 'bfa31178e2a84328ad89fe0402c66098'
@@ -73,6 +89,10 @@ declare global {
                         table: 'sysauto_script'
                         id: 'db000913251b405585cb48959f0c4bf6'
                     }
+                    job_org_rollup: {
+                        table: 'sysauto_script'
+                        id: '2521e3aaa3fc42198722373e79276bea'
+                    }
                     menu_licutil: {
                         table: 'sys_app_application'
                         id: '1e61d77d02144d52b6a596f73bdcd14a'
@@ -88,6 +108,10 @@ declare global {
                     mod_dashboard: {
                         table: 'sys_app_module'
                         id: '5576db96171e4bc397df769668c534e9'
+                    }
+                    mod_org_rollup: {
+                        table: 'sys_app_module'
+                        id: 'fccb103b52154cd6af6316960877b417'
                     }
                     mod_purchase: {
                         table: 'sys_app_module'
@@ -303,6 +327,10 @@ declare global {
                         table: 'sys_module'
                         id: '203a5c78d510401a83684ea42338203d'
                     }
+                    src_server_orgrollup_js: {
+                        table: 'sys_module'
+                        id: '0b822e555fee4a52b6136bffca2c4f6a'
+                    }
                     src_server_snapshot_js: {
                         table: 'sys_module'
                         id: '1f8951ee995542bfb39baa5d141a2782'
@@ -319,6 +347,10 @@ declare global {
                         table: 'sys_scope_privilege'
                         id: 'b4d8e8c77ac44d80afb4093499a43249'
                     }
+                    xsp_cmn_department: {
+                        table: 'sys_scope_privilege'
+                        id: '6c6aa9c0f1414162b011a0bfa1617db4'
+                    }
                     xsp_genai_assist: {
                         table: 'sys_scope_privilege'
                         id: '200ea0eb3701403587fb624b9133504c'
@@ -333,6 +365,28 @@ declare global {
                     }
                 }
                 composite: [
+                    {
+                        table: 'sys_documentation'
+                        id: '08970d668eac4aea9c4b2e881209af02'
+                        key: {
+                            name: 'x_1983_licutil_org_rollup'
+                            element: 'subject_type'
+                            language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_security_acl_role'
+                        id: '0b9b9f2dc8824680aa01378731fd49c5'
+                        key: {
+                            sys_security_acl: 'df08c5a1ff894a128313e3e943b77ec5'
+                            sys_user_role: {
+                                id: 'a5fd1943b32d45bf84c5ed6988247c65'
+                                key: {
+                                    name: 'x_1983_licutil.admin'
+                                }
+                            }
+                        }
+                    },
                     {
                         table: 'sys_documentation'
                         id: '0f006b8320014910b2e3d1024e05aca0'
@@ -456,6 +510,24 @@ declare global {
                     },
                     {
                         table: 'sys_documentation'
+                        id: '2c9e06fc82f844d29f67dc537f2de626'
+                        key: {
+                            name: 'x_1983_licutil_org_rollup'
+                            element: 'snapshot_date'
+                            language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
+                        id: '2f8a91c299e34080afac1ba72322af54'
+                        key: {
+                            name: 'x_1983_licutil_org_rollup'
+                            element: 'manager'
+                            language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
                         id: '351d70988ffe4211ab1c0da4188bd3d5'
                         key: {
                             name: 'x_1983_licutil_category'
@@ -473,6 +545,19 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_security_acl_role'
+                        id: '390fd8e5c08743fe8041e3cca763b33c'
+                        key: {
+                            sys_security_acl: '04f702aca16047f78a32edcca925e095'
+                            sys_user_role: {
+                                id: 'a5fd1943b32d45bf84c5ed6988247c65'
+                                key: {
+                                    name: 'x_1983_licutil.admin'
+                                }
+                            }
+                        }
+                    },
+                    {
                         table: 'sys_user_role'
                         id: '3b37b2860c554b2c8a0a8e04d1f92451'
                         key: {
@@ -484,6 +569,14 @@ declare global {
                         id: '4106dd684f4547e3b58cf1b51f85cd22'
                         key: {
                             name: 'x_1983_licutil_consumption'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
+                        id: '456b9b8d887d4a2db07f7223fb16bb86'
+                        key: {
+                            name: 'x_1983_licutil_org_rollup'
+                            element: 'snapshot_date'
                         }
                     },
                     {
@@ -506,6 +599,14 @@ declare global {
                                     name: 'x_1983_licutil.admin'
                                 }
                             }
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
+                        id: '512698c381ba4e819c3d5cf61137c14a'
+                        key: {
+                            name: 'x_1983_licutil_org_rollup'
+                            element: 'department'
                         }
                     },
                     {
@@ -540,10 +641,26 @@ declare global {
                     },
                     {
                         table: 'sys_dictionary'
+                        id: '5c22e46287444b7ea512b938ce69e438'
+                        key: {
+                            name: 'x_1983_licutil_org_rollup'
+                            element: 'NULL'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
                         id: '6360a1af0a1f4edf9518a541342b4d3c'
                         key: {
                             name: 'x_1983_licutil_consumption'
                             element: 'category'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
+                        id: '64772a01e5e24f65a5131011a3b57dbe'
+                        key: {
+                            name: 'x_1983_licutil_org_rollup'
+                            element: 'subject_label'
                         }
                     },
                     {
@@ -561,6 +678,15 @@ declare global {
                         key: {
                             name: 'x_1983_licutil_consumption'
                             element: 'category'
+                            language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
+                        id: '6e102104ff65415ebb7b172dadd2b25b'
+                        key: {
+                            name: 'x_1983_licutil_org_rollup'
+                            element: 'population'
                             language: 'en'
                         }
                     },
@@ -610,6 +736,23 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_documentation'
+                        id: '78607d303b8e4739ae546cee8bed4c44'
+                        key: {
+                            name: 'x_1983_licutil_org_rollup'
+                            element: 'category'
+                            language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
+                        id: '7cf7ac5cfaf84629a1e392852f54efc8'
+                        key: {
+                            name: 'x_1983_licutil_org_rollup'
+                            element: 'manager'
+                        }
+                    },
+                    {
                         table: 'sys_security_acl_role'
                         id: '7e008f9e633b4c55b378f002a687341a'
                         key: {
@@ -620,6 +763,23 @@ declare global {
                                     name: 'x_1983_licutil.admin'
                                 }
                             }
+                        }
+                    },
+                    {
+                        table: 'sys_choice_set'
+                        id: '7e16d3d6a64546d0b6047e9a634efd09'
+                        key: {
+                            name: 'x_1983_licutil_org_rollup'
+                            element: 'subject_type'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
+                        id: '7f3ed925da2a4868b28fac7ff88cf506'
+                        key: {
+                            name: 'x_1983_licutil_org_rollup'
+                            element: 'NULL'
+                            language: 'en'
                         }
                     },
                     {
@@ -762,6 +922,15 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_choice'
+                        id: '97a0d43b8a2e499e9f93f9c929b48d92'
+                        key: {
+                            name: 'x_1983_licutil_org_rollup'
+                            element: 'subject_type'
+                            value: 'manager'
+                        }
+                    },
+                    {
                         table: 'sys_dictionary'
                         id: '9864689bef8942b0963f34940ad9e514'
                         key: {
@@ -788,6 +957,27 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_dictionary'
+                        id: '9e571f71fa4b4c6ca0fb8760552b60d4'
+                        key: {
+                            name: 'x_1983_licutil_org_rollup'
+                            element: 'subject_type'
+                        }
+                    },
+                    {
+                        table: 'sys_security_acl_role'
+                        id: 'a0914e0c624448f4882a00afda32586f'
+                        key: {
+                            sys_security_acl: 'e6633ffef6514ba4a4ef03c4cfd347ce'
+                            sys_user_role: {
+                                id: 'a5fd1943b32d45bf84c5ed6988247c65'
+                                key: {
+                                    name: 'x_1983_licutil.admin'
+                                }
+                            }
+                        }
+                    },
+                    {
                         table: 'sys_choice_set'
                         id: 'a129329471cd44dcaa283c52b7fd784a'
                         key: {
@@ -796,11 +986,28 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_documentation'
+                        id: 'a205cf1dee3744b3a795f94d133fe9f8'
+                        key: {
+                            name: 'x_1983_licutil_org_rollup'
+                            element: 'department'
+                            language: 'en'
+                        }
+                    },
+                    {
                         table: 'sys_dictionary'
                         id: 'a2f76b398e764d9aa4d6bb599e440cb8'
                         key: {
                             name: 'x_1983_licutil_category'
                             element: 'NULL'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
+                        id: 'a56e13c7394f4535ab3e68db4af19cb3'
+                        key: {
+                            name: 'x_1983_licutil_org_rollup'
+                            element: 'period_month'
                         }
                     },
                     {
@@ -850,6 +1057,37 @@ declare global {
                     },
                     {
                         table: 'sys_documentation'
+                        id: 'a956c8c373a0448282a1858f5215b23f'
+                        key: {
+                            name: 'x_1983_licutil_org_rollup'
+                            element: 'subject_label'
+                            language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_choice'
+                        id: 'a9ffe43ad7464c49b432d44123ad7ec5'
+                        key: {
+                            name: 'x_1983_licutil_org_rollup'
+                            element: 'subject_type'
+                            value: 'department'
+                        }
+                    },
+                    {
+                        table: 'sys_security_acl_role'
+                        id: 'aec7c2cf974c471e9954e379c8a84c22'
+                        key: {
+                            sys_security_acl: 'df08c5a1ff894a128313e3e943b77ec5'
+                            sys_user_role: {
+                                id: '3b37b2860c554b2c8a0a8e04d1f92451'
+                                key: {
+                                    name: 'x_1983_licutil.viewer'
+                                }
+                            }
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
                         id: 'af613caa6a30448295094d649418edf4'
                         key: {
                             name: 'x_1983_licutil_consumption'
@@ -864,6 +1102,14 @@ declare global {
                             name: 'x_1983_licutil_consumption'
                             element: 'period_month'
                             language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
+                        id: 'b0cc2b5ed79f4bb7abfc8d839ab30c06'
+                        key: {
+                            name: 'x_1983_licutil_org_rollup'
+                            element: 'category'
                         }
                     },
                     {
@@ -903,6 +1149,19 @@ declare global {
                             name: 'x_1983_licutil_category'
                             element: 'count_mode'
                             value: 'records'
+                        }
+                    },
+                    {
+                        table: 'sys_security_acl_role'
+                        id: 'bceb1276560b4477a5c39fefaa54691a'
+                        key: {
+                            sys_security_acl: '96bb10740f414a55951aa0b899c0237c'
+                            sys_user_role: {
+                                id: 'a5fd1943b32d45bf84c5ed6988247c65'
+                                key: {
+                                    name: 'x_1983_licutil.admin'
+                                }
+                            }
                         }
                     },
                     {
@@ -981,11 +1240,26 @@ declare global {
                         }
                     },
                     {
+                        table: 'ua_table_licensing_config'
+                        id: 'ca8edbc483ed41179782778635b33c84'
+                        key: {
+                            name: 'x_1983_licutil_org_rollup'
+                        }
+                    },
+                    {
                         table: 'sys_dictionary'
                         id: 'ca97a577b9aa4ede9c62f9fdd287557b'
                         key: {
                             name: 'x_1983_licutil_category'
                             element: 'capability'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
+                        id: 'cca91c12475544189933e94ab7021ae0'
+                        key: {
+                            name: 'x_1983_licutil_org_rollup'
+                            element: 'population'
                         }
                     },
                     {
@@ -1003,6 +1277,22 @@ declare global {
                         key: {
                             name: 'x_1983_licutil_category'
                             element: 'consumer_table'
+                        }
+                    },
+                    {
+                        table: 'sys_documentation'
+                        id: 'd2e8de26e4604a369bc439a9f03a28f3'
+                        key: {
+                            name: 'x_1983_licutil_org_rollup'
+                            element: 'licensed_users'
+                            language: 'en'
+                        }
+                    },
+                    {
+                        table: 'sys_db_object'
+                        id: 'd52a06d1336f4d77b9def6ec5723d521'
+                        key: {
+                            name: 'x_1983_licutil_org_rollup'
                         }
                     },
                     {
@@ -1032,6 +1322,15 @@ declare global {
                         }
                     },
                     {
+                        table: 'sys_documentation'
+                        id: 'dbe9b317731140bb9aa53b6142cacd1e'
+                        key: {
+                            name: 'x_1983_licutil_org_rollup'
+                            element: 'period_month'
+                            language: 'en'
+                        }
+                    },
+                    {
                         table: 'sys_dictionary'
                         id: 'dcb3ef61b9974bdd8a5b8f24e46209f7'
                         key: {
@@ -1054,6 +1353,14 @@ declare global {
                         key: {
                             name: 'x_1983_licutil_consumption'
                             element: 'purchased'
+                        }
+                    },
+                    {
+                        table: 'sys_dictionary'
+                        id: 'e46b1324842d444aabf9e7fe5f4fe951'
+                        key: {
+                            name: 'x_1983_licutil_org_rollup'
+                            element: 'licensed_users'
                         }
                     },
                     {

@@ -30,6 +30,12 @@ Acl({ $id: Now.ID['acl_consumption_create'], type: 'record', table: 'x_1983_licu
 Acl({ $id: Now.ID['acl_consumption_write'], type: 'record', table: 'x_1983_licutil_consumption', operation: 'write', decisionType: 'allow', roles: [licAdmin], adminOverrides: true })
 Acl({ $id: Now.ID['acl_consumption_delete'], type: 'record', table: 'x_1983_licutil_consumption', operation: 'delete', decisionType: 'allow', roles: [licAdmin], adminOverrides: true })
 
+// ── x_1983_licutil_org_rollup (published org/department rollup) ──────────────
+Acl({ $id: Now.ID['acl_rollup_read'], type: 'record', table: 'x_1983_licutil_org_rollup', operation: 'read', decisionType: 'allow', roles: [licViewer, licAdmin], adminOverrides: true })
+Acl({ $id: Now.ID['acl_rollup_create'], type: 'record', table: 'x_1983_licutil_org_rollup', operation: 'create', decisionType: 'allow', roles: [licAdmin], adminOverrides: true })
+Acl({ $id: Now.ID['acl_rollup_write'], type: 'record', table: 'x_1983_licutil_org_rollup', operation: 'write', decisionType: 'allow', roles: [licAdmin], adminOverrides: true })
+Acl({ $id: Now.ID['acl_rollup_delete'], type: 'record', table: 'x_1983_licutil_org_rollup', operation: 'delete', decisionType: 'allow', roles: [licAdmin], adminOverrides: true })
+
 // ── Dashboard data API (GlideAjax) ───────────────────────────────────────────
 // Only authenticated viewers/admins may execute the data provider.
 Acl({
