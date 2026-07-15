@@ -60,6 +60,7 @@ LicenseAnalytics.prototype = Object.extendsObject(global.AbstractAjaxProcessor, 
                 if (query) {
                     ga.addEncodedQuery(query);
                 }
+                ga.addAggregate('COUNT'); // ensure the aggregate materializes group rows
                 ga.groupBy(refField);
                 ga.query();
                 var n = 0;
@@ -161,6 +162,7 @@ LicenseAnalytics.prototype = Object.extendsObject(global.AbstractAjaxProcessor, 
                 if (query) {
                     ga.addEncodedQuery(query);
                 }
+                ga.addAggregate('COUNT'); // ensure the aggregate materializes group rows
                 ga.groupBy(refField);
                 ga.query();
                 while (ga.next()) {
@@ -209,7 +211,7 @@ LicenseAnalytics.prototype = Object.extendsObject(global.AbstractAjaxProcessor, 
         var order = [];
         var tiers = {};
         var gr = new GlideRecordSecure(this.CAT);
-        gr.addActiveQuery();
+        gr.addQuery('active', true);
         gr.orderBy('capability');
         gr.orderBy('name');
         gr.query();
@@ -325,7 +327,7 @@ LicenseAnalytics.prototype = Object.extendsObject(global.AbstractAjaxProcessor, 
         var cats = [];
         var tiers = {};
         var gr = new GlideRecordSecure(this.CAT);
-        gr.addActiveQuery();
+        gr.addQuery('active', true);
         gr.orderBy('capability');
         gr.orderBy('name');
         gr.query();
@@ -398,7 +400,7 @@ LicenseAnalytics.prototype = Object.extendsObject(global.AbstractAjaxProcessor, 
             var batch = frontier.splice(0, 200);
             var gr = new GlideRecord('sys_user');
             gr.addQuery('manager', 'IN', batch.join(','));
-            gr.addActiveQuery();
+            gr.addQuery('active', true);
             gr.query();
             while (gr.next()) {
                 if (guard >= this.ORG_CAP) {
@@ -421,7 +423,7 @@ LicenseAnalytics.prototype = Object.extendsObject(global.AbstractAjaxProcessor, 
         var set = {};
         var g = new GlideRecord('sys_user');
         g.addQuery('department', deptId);
-        g.addActiveQuery();
+        g.addQuery('active', true);
         g.setLimit(this.ORG_CAP);
         g.query();
         while (g.next()) {
@@ -470,8 +472,9 @@ LicenseAnalytics.prototype = Object.extendsObject(global.AbstractAjaxProcessor, 
         var ids = [];
         var seen = {};
         var ga = new GlideAggregate('sys_user');
-        ga.addActiveQuery();
+        ga.addQuery('active', true);
         ga.addNotNullQuery('manager');
+        ga.addAggregate('COUNT'); // ensure the aggregate materializes group rows
         ga.groupBy('manager');
         ga.query();
         while (ga.next()) {

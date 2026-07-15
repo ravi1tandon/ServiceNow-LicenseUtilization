@@ -605,9 +605,14 @@ function licInitOrg() {
 function licFillOrgSubjects() {
     var scope = licById('lic-org-scope').value;
     var list = (LIC_ORG.opts && (scope === 'department' ? LIC_ORG.opts.departments : LIC_ORG.opts.managers)) || [];
-    var html = '<option value="">— select —</option>';
-    for (var i = 0; i < list.length; i++) {
-        html += '<option value="' + licEsc(list[i].sys_id) + '">' + licEsc(list[i].name) + '</option>';
+    var html;
+    if (!list.length) {
+        html = '<option value="">— none found (' + (scope === 'department' ? 'no departments' : 'no managers') + ') —</option>';
+    } else {
+        html = '<option value="">— select —</option>';
+        for (var i = 0; i < list.length; i++) {
+            html += '<option value="' + licEsc(list[i].sys_id) + '">' + licEsc(list[i].name) + '</option>';
+        }
     }
     licById('lic-org-subject').innerHTML = html;
 }

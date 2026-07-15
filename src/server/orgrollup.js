@@ -68,7 +68,7 @@
 
     // Managers (anyone who manages at least one active user).
     var ga = new GlideAggregate('sys_user');
-    ga.addActiveQuery();
+    ga.addQuery('active', true);
     ga.addNotNullQuery('manager');
     ga.groupBy('manager');
     ga.query();
