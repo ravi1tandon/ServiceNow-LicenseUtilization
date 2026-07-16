@@ -105,3 +105,20 @@ Record({
         order: 500,
     },
 })
+
+// App settings (system properties for this app, incl. the Org dropdown query).
+Record({
+    $id: Now.ID['mod_settings'],
+    table: 'sys_app_module',
+    data: {
+        title: 'App Settings',
+        application: licMenu,
+        link_type: 'LIST',
+        name: 'sys_properties',
+        filter: 'nameSTARTSWITHx_1983_licutil',
+        hint: 'App configuration properties, including the By Org manager/VP dropdown query',
+        roles: [ADMIN],
+        active: true,
+        order: 600,
+    },
+})

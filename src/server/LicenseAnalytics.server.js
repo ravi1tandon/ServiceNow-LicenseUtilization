@@ -469,32 +469,49 @@ LicenseAnalytics.prototype = Object.extendsObject(global.AbstractAjaxProcessor, 
         if (!this._authorized()) {
             return JSON.stringify({ managers: [], departments: [] });
         }
-        var ids = [];
-        var seen = {};
-        var ga = new GlideAggregate('sys_user');
-        ga.addQuery('active', true);
-        ga.addNotNullQuery('manager');
-        ga.addAggregate('COUNT'); // ensure the aggregate materializes group rows
-        ga.groupBy('manager');
-        ga.query();
-        while (ga.next()) {
-            var m = ga.getValue('manager');
-            if (m && !seen[m]) {
-                seen[m] = 1;
-                ids.push(m);
-            }
-        }
         var managers = [];
-        if (ids.length) {
-            var uu = new GlideRecord('sys_user');
-            uu.addQuery('sys_id', 'IN', ids.join(','));
-            uu.orderBy('name');
-            uu.query();
-            while (uu.next()) {
+        // Configurable: an encoded query on sys_user selecting who appears as a selectable
+        // manager / VP / department head. Empty = default (anyone who manages an active user).
+        var mq = gs.getProperty('x_1983_licutil.org.manager_query', '');
+        if (mq) {
+            var mu = new GlideRecord('sys_user');
+            mu.addEncodedQuery(mq);
+            mu.orderBy('name');
+            mu.setLimit(this.DEDUP_CAP);
+            mu.query();
+            while (mu.next()) {
                 managers.push({
-                    sys_id: uu.getUniqueValue(),
-                    name: uu.getDisplayValue('name') || uu.getValue('user_name'),
+                    sys_id: mu.getUniqueValue(),
+                    name: mu.getDisplayValue('name') || mu.getValue('user_name'),
                 });
+            }
+        } else {
+            var ids = [];
+            var seen = {};
+            var ga = new GlideAggregate('sys_user');
+            ga.addQuery('active', true);
+            ga.addNotNullQuery('manager');
+            ga.addAggregate('COUNT'); // ensure the aggregate materializes group rows
+            ga.groupBy('manager');
+            ga.query();
+            while (ga.next()) {
+                var m = ga.getValue('manager');
+                if (m && !seen[m]) {
+                    seen[m] = 1;
+                    ids.push(m);
+                }
+            }
+            if (ids.length) {
+                var uu = new GlideRecord('sys_user');
+                uu.addQuery('sys_id', 'IN', ids.join(','));
+                uu.orderBy('name');
+                uu.query();
+                while (uu.next()) {
+                    managers.push({
+                        sys_id: uu.getUniqueValue(),
+                        name: uu.getDisplayValue('name') || uu.getValue('user_name'),
+                    });
+                }
             }
         }
         var departments = [];
@@ -512,8 +529,8 @@ LicenseAnalytics.prototype = Object.extendsObject(global.AbstractAjaxProcessor, 
         if (!this._authorized()) {
             return JSON.stringify({ error: 'Not authorized.' });
         }
-        var scope = this.getParameter('sysparm_scope') || 'manager';
-        var id = this.getParameter('sysparm_id');
+        var scope = this.getParameter('sysparm_org_type') || 'manager';
+        var id = this.getParameter('sysparm_org_id');
         if (!id) {
             return JSON.stringify({ error: 'Nothing selected.' });
         }
@@ -533,6 +550,43 @@ LicenseAnalytics.prototype = Object.extendsObject(global.AbstractAjaxProcessor, 
         return JSON.stringify(
             this.orgRollupForUsers(this.orgSubtreeUserIds(id, false), mg.getDisplayValue('name') + ' (reports)'),
         );
+    },
+
+    // GlideAjax: the FULL tier-deduped member list for one category (for the drill-down
+    // "download / see all"). For a user-based tiered SKU this returns the net set — users
+    // already counted in a higher tier are excluded — so it matches the tile count exactly.
+    // Non-user categories return their raw source list (no cross-tier dedup applies).
+    getCategoryConsumers: function () {
+        if (!this._authorized()) {
+            return JSON.stringify({ error: 'You are not authorized to view license data.' });
+        }
+        var catId = this.getParameter('sysparm_cat_id');
+        if (!catId) {
+            return JSON.stringify({ error: 'No category specified.' });
+        }
+        var sets = this.userConsumerSets();
+        for (var i = 0; i < sets.length; i++) {
+            if (sets[i].id === catId) {
+                var users = [];
+                var ids = sets[i].ids;
+                for (var sid in ids) {
+                    users.push({ sys_id: sid, label: ids[sid] });
+                }
+                return JSON.stringify({ id: catId, name: sets[i].name, count: users.length, deduped: true, users: users });
+            }
+        }
+        var gr = new GlideRecordSecure(this.CAT);
+        if (gr.get(catId)) {
+            var list = this.listConsumers(
+                gr.getValue('source_table'),
+                gr.getValue('source_query'),
+                gr.getValue('consumer_ref_field'),
+                gr.getValue('consumer_table'),
+                this.DEDUP_CAP,
+            );
+            return JSON.stringify({ id: catId, name: gr.getValue('name'), count: list.length, deduped: false, users: list });
+        }
+        return JSON.stringify({ error: 'Category not found.' });
     },
 
     // Reusable server-side builder (also callable from server scripts / tests).

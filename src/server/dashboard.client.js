@@ -237,7 +237,23 @@ function licRenderRecords(d) {
             licEsc(c.source_table) +
             '</code>';
         html += c.source_query ? ' · <code>' + licEsc(c.source_query) + '</code>' : '';
-        html += ' · <a href="' + listUrl + '" target="_blank" rel="noopener">Open full list</a></div>';
+        // The deduped CSV always matches the tile count. For tiered SKUs the raw list link is
+        // demoted (and labeled) so users are never handed a non-deduped view as the source of truth.
+        html +=
+            ' · <a href="#" class="lic-dl-csv" data-cat="' +
+            licEsc(c.id) +
+            '" data-name="' +
+            licEsc(c.name) +
+            '">Download full list (CSV)</a>';
+        if (!c.tier_group) {
+            html += ' · <a href="' + listUrl + '" target="_blank" rel="noopener">Open full list</a>';
+        } else {
+            html +=
+                ' · <a href="' +
+                listUrl +
+                '" target="_blank" rel="noopener" title="Raw source query — NOT tier-deduped; includes users also counted under a higher tier">raw source ⧉</a>';
+        }
+        html += '</div>';
         if (c.tier_note) {
             html += '<div class="lic-muted" style="color:#8a2be2">ⓘ ' + licEsc(c.tier_note) + '</div>';
         }
@@ -262,7 +278,7 @@ function licRenderRecords(d) {
                     cons.length +
                     ' of ' +
                     licNum(c.consumer_count) +
-                    '. Use “Open full list” to see all.</div>';
+                    ' (tier-deduped). Use “Download full list (CSV)” for the complete deduped set.</div>';
             }
         } else {
             html += '<div class="lic-muted">No matching records.</div>';
@@ -270,6 +286,55 @@ function licRenderRecords(d) {
         html += '</div>';
     }
     licById('lic-panel-records').innerHTML = html;
+    var dls = document.getElementsByClassName('lic-dl-csv');
+    for (var di = 0; di < dls.length; di++) {
+        dls[di].addEventListener('click', function (e) {
+            e.preventDefault();
+            licDownloadCatConsumers(this.getAttribute('data-cat'), this.getAttribute('data-name'));
+        });
+    }
+}
+
+function licCsvDownload(filename, rows) {
+    var csv = rows
+        .map(function (r) {
+            return r
+                .map(function (v) {
+                    return '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
+                })
+                .join(',');
+        })
+        .join('\n');
+    var a = document.createElement('a');
+    a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
+
+// Fetch and download the FULL tier-deduped member list for one category.
+function licDownloadCatConsumers(catId, catName) {
+    var ga = new GlideAjax('x_1983_licutil.LicenseAnalytics');
+    ga.addParam('sysparm_name', 'getCategoryConsumers');
+    ga.addParam('sysparm_cat_id', catId);
+    ga.getXMLAnswer(function (answer) {
+        var res;
+        try {
+            res = JSON.parse(answer || '{}');
+        } catch (e) {
+            res = { error: 'Could not parse response.' };
+        }
+        if (res.error) {
+            alert(res.error);
+            return;
+        }
+        var rows = [['Category', 'Deduped', 'sys_id', 'Name']];
+        (res.users || []).forEach(function (u) {
+            rows.push([catName, res.deduped ? 'yes' : 'no', u.sys_id, u.label]);
+        });
+        licCsvDownload((catName || 'consumers').replace(/[^a-z0-9]+/gi, '_') + '_members.csv', rows);
+    });
 }
 
 function licSvgOpen(w, h) {
@@ -628,8 +693,8 @@ function licLoadOrg() {
     res.innerHTML = '<div class="lic-muted">Computing…</div>';
     var ga = new GlideAjax('x_1983_licutil.LicenseAnalytics');
     ga.addParam('sysparm_name', 'getOrgData');
-    ga.addParam('sysparm_scope', scope);
-    ga.addParam('sysparm_id', id);
+    ga.addParam('sysparm_org_type', scope);
+    ga.addParam('sysparm_org_id', id);
     ga.getXMLAnswer(function (answer) {
         var d;
         try {

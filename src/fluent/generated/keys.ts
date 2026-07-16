@@ -121,6 +121,10 @@ declare global {
                         table: 'sys_app_module'
                         id: '5b99495e70ef44d699541390bf1d8b4d'
                     }
+                    mod_settings: {
+                        table: 'sys_app_module'
+                        id: '09a8dee3539842a7b68878ddefa6bba5'
+                    }
                     notif_summary_email: {
                         table: 'sysevent_email_action'
                         id: '15d149e97c29414582ab0a8e100b363d'
@@ -128,6 +132,10 @@ declare global {
                     package_json: {
                         table: 'sys_module'
                         id: '39a3ce4788fb42199e0e700a93d25943'
+                    }
+                    prop_manager_query: {
+                        table: 'sys_properties'
+                        id: '7bb60116d6104f2bba14f865976ca265'
                     }
                     seed_cat_biz: {
                         table: 'x_1983_licutil_category'
