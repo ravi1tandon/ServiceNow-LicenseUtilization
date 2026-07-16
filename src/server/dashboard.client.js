@@ -49,6 +49,51 @@ function licTab(name) {
             p.style.display = panels[j] === name ? '' : 'none';
         }
     }
+    if (name === 'records' && !LIC.recordsLoaded) {
+        licLoadRecords();
+    }
+}
+
+// Live, tier-deduped member lists for the Source Records tab (heavy; on demand only).
+function licLoadRecords() {
+    LIC.recordsLoaded = true;
+    var panel = licById('lic-panel-records');
+    if (panel) {
+        panel.innerHTML = '<div class="lic-muted">Loading members live from source…</div>';
+    }
+    var ga = new GlideAjax('x_1983_licutil.LicenseAnalytics');
+    ga.addParam('sysparm_name', 'getRecordsData');
+    ga.getXMLAnswer(function (answer) {
+        var data;
+        try {
+            data = JSON.parse(answer || '{}');
+        } catch (e) {
+            data = { categories: [] };
+        }
+        licRenderRecords(data);
+    });
+}
+
+// Admin action: recompute live from source, persist the snapshot, and re-render.
+function licRefreshLive() {
+    licToast('Recomputing live from source — this can take a moment…');
+    var ga = new GlideAjax('x_1983_licutil.LicenseAnalytics');
+    ga.addParam('sysparm_name', 'refreshNow');
+    ga.getXMLAnswer(function (answer) {
+        var data;
+        try {
+            data = JSON.parse(answer || '{}');
+        } catch (e) {
+            data = { error: 'Unexpected response.' };
+        }
+        if (data.error) {
+            licToast(data.error, true);
+            return;
+        }
+        LIC.data = data;
+        licRender();
+        licToast('Refreshed live and saved.');
+    });
 }
 
 function licRender() {
@@ -76,6 +121,9 @@ function licRender() {
         status.style.display = 'none';
     }
     if (gen) {
+        var snapNote = d.snapshot_based
+            ? ' · from saved snapshot' + (d.last_snapshot ? ' (' + licEsc(d.last_snapshot) + ')' : '')
+            : '';
         gen.innerHTML =
             'Generated ' +
             licEsc(d.generated) +
@@ -83,12 +131,15 @@ function licRender() {
             d.categories.length +
             ' SKU(s) · ' +
             d.months.length +
-            ' month(s)';
+            ' month(s)' +
+            snapNote;
     }
     licRenderOverview(d);
     licRenderSkus(d);
     licRenderTrend(d);
-    licRenderRecords(d);
+    // Source Records members are loaded live on demand (see licTab -> licLoadRecords) so the
+    // main dashboard stays fast; invalidate any previously loaded set on each render.
+    LIC.recordsLoaded = false;
     licTab(LIC.tab);
 }
 
@@ -715,9 +766,7 @@ function licRenderOrgData(d) {
     }
     var html = '<div class="lic-card"><h3>' + licEsc(d.subject) + '</h3>';
     html +=
-        '<div class="lic-muted">' +
-        licNum(d.population) +
-        ' user(s) in scope · generated ' +
+        '<div class="lic-muted">Licensed users reporting directly or indirectly · generated ' +
         licEsc(d.generated) +
         '</div>';
     html += '<div class="lic-grid" style="margin-top:10px">';
@@ -809,6 +858,10 @@ function licBoot() {
     var eb = licById('lic-email');
     if (eb) {
         eb.addEventListener('click', licEmailSummary);
+    }
+    var rl = licById('lic-refresh-live');
+    if (rl) {
+        rl.addEventListener('click', licRefreshLive);
     }
     var tb = document.getElementsByClassName('lic-tab');
     for (var i = 0; i < tb.length; i++) {

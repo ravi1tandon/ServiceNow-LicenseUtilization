@@ -17,12 +17,49 @@ LicenseAnalytics.prototype = Object.extendsObject(global.AbstractAjaxProcessor, 
         return gs.hasRole('x_1983_licutil.viewer') || gs.hasRole('x_1983_licutil.admin') || gs.hasRole('admin');
     },
 
-    // GlideAjax entry point. Returns the full dashboard payload as a JSON string.
+    // GlideAjax entry point (fast path). Serves KPI / By-SKU / trend tiles from the stored
+    // consumption snapshots — no live counting — so the page loads instantly. "Refresh live"
+    // (refreshNow) recomputes and persists; a daily job keeps the snapshot fresh.
     getDashboardData: function () {
         if (!this._authorized()) {
             return JSON.stringify({ error: 'Not authorized to view license data.' });
         }
-        return JSON.stringify(this.buildPayload());
+        return JSON.stringify(this.buildFromSnapshots());
+    },
+
+    // GlideAjax: recompute live (tier-deduped), persist as this period's snapshot, return the
+    // refreshed snapshot-backed payload. Admin-only because it writes. Backs "Refresh live".
+    refreshNow: function () {
+        if (!(gs.hasRole('x_1983_licutil.admin') || gs.hasRole('admin'))) {
+            return JSON.stringify({ error: 'Live refresh is available to administrators. Showing the latest saved snapshot.' });
+        }
+        this.writeSnapshot();
+        return JSON.stringify(this.buildFromSnapshots());
+    },
+
+    // GlideAjax: live tier-deduped member lists per category for the Source Records tab. Heavy,
+    // so the client loads it on demand only when that tab is first opened.
+    getRecordsData: function () {
+        if (!this._authorized()) {
+            return JSON.stringify({ categories: [] });
+        }
+        var computed = this.computeCategories();
+        var out = [];
+        for (var i = 0; i < computed.order.length; i++) {
+            var c = computed.map[computed.order[i]];
+            out.push({
+                id: c.id,
+                name: c.name,
+                capability: c.capability,
+                source_table: c.source_table,
+                source_query: c.source_query,
+                consumer_count: c.consumer_count,
+                consumers: c.consumers,
+                consumer_more: c.consumer_more,
+                tier_group: c.tier_group,
+            });
+        }
+        return JSON.stringify({ categories: out, generated: new GlideDateTime().getDisplayValue() });
     },
 
     // GlideAjax: email the current user a summary of the dashboard. Fires a scoped event that
@@ -590,6 +627,196 @@ LicenseAnalytics.prototype = Object.extendsObject(global.AbstractAjaxProcessor, 
     },
 
     // Reusable server-side builder (also callable from server scripts / tests).
+    // Snapshot-backed payload (fast, no live counting). consumed/utilization per category come
+    // from the latest stored snapshot; trend/series from snapshot history. Member lists are
+    // omitted (deferred) — the Source Records tab loads them on demand via getRecordsData.
+    buildFromSnapshots: function () {
+        var cats = {};
+        var order = [];
+        var gr = new GlideRecordSecure(this.CAT);
+        gr.addQuery('active', true);
+        gr.orderBy('capability');
+        gr.orderBy('name');
+        gr.query();
+        while (gr.next()) {
+            var id = gr.getUniqueValue();
+            cats[id] = {
+                id: id,
+                name: gr.getValue('name') || '',
+                sku: gr.getValue('sku_code') || '',
+                capability: gr.getDisplayValue('capability') || '',
+                purchased: 0,
+                consumed: 0,
+                raw_count: 0,
+                count_mode: gr.getValue('count_mode') || 'records',
+                su_ratio: parseInt(gr.getValue('su_ratio') || '1', 10),
+                tier_group: gr.getValue('tier_group') || '',
+                utilization: 0,
+                source_table: gr.getValue('source_table') || '',
+                source_query: gr.getValue('source_query') || '',
+                consumers: [],
+                consumer_count: 0,
+                consumer_more: false,
+                deferred: true,
+                byMonth: {},
+                series: [],
+            };
+            order.push(id);
+        }
+
+        var pg = new GlideRecordSecure(this.PUR);
+        pg.query();
+        while (pg.next()) {
+            var pcat = pg.getValue('category');
+            if (cats[pcat]) {
+                cats[pcat].purchased += parseInt(pg.getValue('licenses_purchased') || '0', 10);
+            }
+        }
+
+        var monthsSet = {};
+        var cg = new GlideRecordSecure(this.CON);
+        cg.orderBy('category');
+        cg.orderBy('period_month');
+        cg.query();
+        while (cg.next()) {
+            var ccat = cg.getValue('category');
+            if (!cats[ccat]) {
+                continue;
+            }
+            var m = cg.getValue('period_month') || '';
+            monthsSet[m] = true;
+            cats[ccat].byMonth[m] = {
+                month: m,
+                purchased: parseInt(cg.getValue('purchased') || '0', 10),
+                consumed: parseInt(cg.getValue('consumed') || '0', 10),
+                utilization: parseFloat(cg.getValue('utilization_pct') || '0'),
+            };
+        }
+
+        var months = Object.keys(monthsSet).sort();
+        var categories = [];
+        var totalPurchased = 0;
+        var totalConsumed = 0;
+        for (var i = 0; i < order.length; i++) {
+            var c = cats[order[i]];
+            for (var j = 0; j < months.length; j++) {
+                c.series.push(
+                    c.byMonth[months[j]] || { month: months[j], purchased: 0, consumed: 0, utilization: 0 },
+                );
+            }
+            if (c.series.length) {
+                var last = c.series[c.series.length - 1];
+                c.consumed = last.consumed;
+                c.raw_count = last.consumed;
+                c.consumer_count = last.consumed;
+            }
+            c.utilization = c.purchased > 0 ? this._round((c.consumed / c.purchased) * 100) : 0;
+            delete c.byMonth;
+            categories.push(c);
+            totalPurchased += c.purchased;
+            totalConsumed += c.consumed;
+        }
+
+        var overall = [];
+        for (var k = 0; k < months.length; k++) {
+            var mp = 0;
+            var mc = 0;
+            for (var q = 0; q < categories.length; q++) {
+                var ptn = categories[q].series[k];
+                mp += ptn.purchased;
+                mc += ptn.consumed;
+            }
+            overall.push({
+                month: months[k],
+                purchased: mp,
+                consumed: mc,
+                utilization: mp > 0 ? this._round((mc / mp) * 100) : 0,
+            });
+        }
+
+        var mom = { consumed_delta_pct: 0, utilization_delta: 0, has_prior: false };
+        if (overall.length >= 2) {
+            var cur = overall[overall.length - 1];
+            var prev = overall[overall.length - 2];
+            mom.has_prior = true;
+            mom.consumed_delta_pct =
+                prev.consumed > 0 ? this._round(((cur.consumed - prev.consumed) / prev.consumed) * 100) : 0;
+            mom.utilization_delta = this._round(cur.utilization - prev.utilization);
+        }
+
+        var lastSnap = '';
+        var ls = new GlideRecordSecure(this.CON);
+        ls.orderByDesc('snapshot_date');
+        ls.setLimit(1);
+        ls.query();
+        if (ls.next()) {
+            lastSnap = ls.getDisplayValue('snapshot_date');
+        }
+
+        return {
+            generated: new GlideDateTime().getDisplayValue(),
+            snapshot_based: true,
+            last_snapshot: lastSnap,
+            totals: {
+                purchased: totalPurchased,
+                consumed: totalConsumed,
+                utilization: totalPurchased > 0 ? this._round((totalConsumed / totalPurchased) * 100) : 0,
+                categories: categories.length,
+            },
+            months: months,
+            overall_series: overall,
+            mom: mom,
+            categories: categories,
+        };
+    },
+
+    // Compute live (tier-deduped) counts and upsert this period's snapshot rows. Shared by the
+    // daily scheduled job and the admin "Refresh live" button.
+    writeSnapshot: function () {
+        var computed = this.computeCategories();
+        var now = new GlideDateTime();
+        var period = now.getValue().substring(0, 7);
+        var today = now.getDate().getValue();
+        var processed = 0;
+        for (var i = 0; i < computed.order.length; i++) {
+            var catId = computed.order[i];
+            var consumed = computed.map[catId].consumed;
+            var purchased = 0;
+            var pg = new GlideRecord(this.PUR);
+            pg.addQuery('category', catId);
+            pg.query();
+            while (pg.next()) {
+                purchased += parseInt(pg.getValue('licenses_purchased') || '0', 10);
+            }
+            var util = purchased > 0 ? Math.round((consumed / purchased) * 10000) / 100 : 0;
+            var snap = new GlideRecord(this.CON);
+            snap.addQuery('category', catId);
+            snap.addQuery('period_month', period);
+            snap.query();
+            if (snap.next()) {
+                snap.setValue('purchased', purchased);
+                snap.setValue('consumed', consumed);
+                snap.setValue('utilization_pct', util);
+                snap.setValue('snapshot_date', today);
+                snap.update();
+            } else {
+                snap.initialize();
+                snap.setValue('category', catId);
+                snap.setValue('period_month', period);
+                snap.setValue('purchased', purchased);
+                snap.setValue('consumed', consumed);
+                snap.setValue('utilization_pct', util);
+                snap.setValue('snapshot_date', today);
+                snap.insert();
+            }
+            processed++;
+        }
+        gs.info('[LicenseUtilization] Snapshot written for ' + period + ': ' + processed + ' category(ies).');
+        return processed;
+    },
+
+    // Live payload (tier-deduped, computed on the fly). Retained for parity/testing; the UI now
+    // uses buildFromSnapshots for speed.
     buildPayload: function () {
         var computed = this.computeCategories();
         var cats = computed.map;
