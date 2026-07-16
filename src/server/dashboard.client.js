@@ -818,32 +818,39 @@ function licExportOrgCsv() {
         licToast('Run a rollup first.', true);
         return;
     }
-    var csv =
-        'License rollup,' +
-        licCsvCell(d.subject) +
-        '\r\nUsers in scope,' +
-        licCsvCell(d.population) +
-        '\r\nGenerated,' +
-        licCsvCell(d.generated) +
-        '\r\n\r\n';
-    csv += 'SUMMARY\r\n' + licCsvRow(['Category', 'Licensed Users']);
-    for (var i = 0; i < d.categories.length; i++) {
-        csv += licCsvRow([d.categories[i].name, d.categories[i].licensed_users]);
-    }
-    csv += '\r\nLICENSED USERS BY CATEGORY\r\n' + licCsvRow(['Category', 'User', 'Sys ID']);
-    for (var j = 0; j < d.categories.length; j++) {
-        var us = d.categories[j].users || [];
-        for (var k = 0; k < us.length; k++) {
-            csv += licCsvRow([d.categories[j].name, us[k].label, us[k].sys_id]);
+    // Fetch the FULL (uncapped) member list from the server so the CSV isn't limited to the
+    // first 100 shown on screen.
+    licToast('Preparing full CSV…');
+    var ga = new GlideAjax('x_1983_licutil.LicenseAnalytics');
+    ga.addParam('sysparm_name', 'getOrgCsv');
+    ga.addParam('sysparm_org_type', licById('lic-org-scope').value);
+    ga.addParam('sysparm_org_id', licById('lic-org-subject').value);
+    ga.getXMLAnswer(function (answer) {
+        var full;
+        try {
+            full = JSON.parse(answer || '{}');
+        } catch (e) {
+            full = { rows: [] };
         }
-    }
-    var a = document.createElement('a');
-    a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
-    a.download = 'license-org-rollup.csv';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    licToast('Org rollup CSV exported.');
+        var csv =
+            'License rollup,' + licCsvCell(d.subject) + '\r\nGenerated,' + licCsvCell(d.generated) + '\r\n\r\n';
+        csv += 'SUMMARY\r\n' + licCsvRow(['Category', 'Licensed Users']);
+        for (var i = 0; i < d.categories.length; i++) {
+            csv += licCsvRow([d.categories[i].name, d.categories[i].licensed_users]);
+        }
+        csv += '\r\nLICENSED USERS BY CATEGORY\r\n' + licCsvRow(['Category', 'User', 'Sys ID']);
+        var rows = full.rows || [];
+        for (var r = 0; r < rows.length; r++) {
+            csv += licCsvRow(rows[r]);
+        }
+        var a = document.createElement('a');
+        a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+        a.download = 'license-org-rollup.csv';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        licToast('Org rollup CSV exported (' + rows.length + ' member rows).');
+    });
 }
 
 function licBoot() {

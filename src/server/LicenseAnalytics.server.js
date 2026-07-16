@@ -589,6 +589,47 @@ LicenseAnalytics.prototype = Object.extendsObject(global.AbstractAjaxProcessor, 
         );
     },
 
+    // GlideAjax: FULL (uncapped) tier-deduped member list for the selected org/department, for
+    // CSV export. Unlike getOrgData (which caps each category's list for display), this returns
+    // every matching user so the CSV is complete.
+    getOrgCsv: function () {
+        if (!this._authorized()) {
+            return JSON.stringify({ rows: [] });
+        }
+        var scope = this.getParameter('sysparm_org_type') || 'manager';
+        var id = this.getParameter('sysparm_org_id');
+        if (!id) {
+            return JSON.stringify({ rows: [] });
+        }
+        var userSet, label;
+        if (scope === 'department') {
+            var dg = new GlideRecord('cmn_department');
+            if (!dg.get(id)) {
+                return JSON.stringify({ rows: [] });
+            }
+            userSet = this.deptUserIds(id);
+            label = dg.getDisplayValue('name') + ' (department)';
+        } else {
+            var mg = new GlideRecord('sys_user');
+            if (!mg.get(id)) {
+                return JSON.stringify({ rows: [] });
+            }
+            userSet = this.orgSubtreeUserIds(id, false);
+            label = mg.getDisplayValue('name') + ' (reports)';
+        }
+        var sets = this.userConsumerSets(); // full deduped id->label per user-based category
+        var rows = [];
+        for (var i = 0; i < sets.length; i++) {
+            var s = sets[i];
+            for (var sid in s.ids) {
+                if (userSet[sid]) {
+                    rows.push([s.name, s.ids[sid], sid]);
+                }
+            }
+        }
+        return JSON.stringify({ subject: label, generated: new GlideDateTime().getDisplayValue(), rows: rows });
+    },
+
     // GlideAjax: the FULL tier-deduped member list for one category (for the drill-down
     // "download / see all"). For a user-based tiered SKU this returns the net set — users
     // already counted in a higher tier are excluded — so it matches the tile count exactly.
