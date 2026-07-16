@@ -8,7 +8,9 @@ LicenseAnalytics.prototype = Object.extendsObject(global.AbstractAjaxProcessor, 
     CON: 'x_1983_licutil_consumption',
     ROLLUP: 'x_1983_licutil_org_rollup',
     LIST_LIMIT: 100,
-    DEDUP_CAP: 5000, // max distinct consumers materialized per category (safety bound)
+    DEDUP_CAP: 20000, // max distinct consumers materialized per category (safety bound). Counts
+    // are NEVER capped (countConsumers uses getRowCount); this only bounds member LIST/CSV export.
+    // For device SKUs larger than this, use the card's "Open full list" native export.
     ORG_CAP: 10000, // max users walked in a reporting subtree (safety bound)
 
     // Role gate for every client-callable entry point (defense-in-depth on top of the
